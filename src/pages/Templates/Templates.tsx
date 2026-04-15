@@ -125,7 +125,6 @@ const TEMPLATES: Array<{
             height="3"
             rx="1.5"
             fill="var(--color-border)"
-            key={y}
           />
         ))}
         {/* Main content */}
@@ -360,11 +359,8 @@ export default function Templates() {
       (localStorage.getItem(TEMPLATE_STORAGE_KEY) as TemplateId | null) ??
       "classic",
   );
-  const [hoveredPro, setHoveredPro] = useState<TemplateId | null>(null);
-
   const handleSelect = (id: TemplateId, pro: boolean) => {
     if (pro) {
-      setHoveredPro(id);
       return;
     }
     setActive(id);
@@ -403,7 +399,6 @@ export default function Templates() {
         >
           {TEMPLATES.map((tmpl) => {
             const isActive = active === tmpl.id;
-            const showProHint = hoveredPro === tmpl.id;
             return (
               <motion.div
                 key={tmpl.id}
@@ -421,8 +416,6 @@ export default function Templates() {
                 {/* Preview */}
                 <div
                   className="templates_preview"
-                  onMouseEnter={() => tmpl.pro && setHoveredPro(tmpl.id)}
-                  onMouseLeave={() => setHoveredPro(null)}
                 >
                   {tmpl.preview}
 

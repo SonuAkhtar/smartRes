@@ -44,7 +44,6 @@ function AppLoadingScreen() {
   );
 }
 
-// Migrate profile saved in old single-entry format to new arrays format
 function migrateProfile(raw: Record<string, unknown>): UserProfile {
   if (!raw.educations) {
     const edu = raw.education as
@@ -98,9 +97,6 @@ function ProfileSync() {
       return;
     }
 
-    // Load all user data from Supabase. Run all 3 in parallel for speed, but
-    // only update state when the fetch actually returns data - this way a
-    // transient Supabase error won't silently wipe locally-cached data.
     const load = async () => {
       const [p, h, a] = await Promise.all([
         loadProfile(user.id),
@@ -109,8 +105,6 @@ function ProfileSync() {
       ]);
       if (p)
         setProfile(migrateProfile(p as unknown as Record<string, unknown>));
-      // If Supabase returned nothing but we have local data, keep local copy
-      // (avoids blank screen when Supabase is slow / RLS hiccup on first load)
       else if (!profile) setProfile(null);
       if (h.length) setJobHistory(h);
       if (a.length) setApplications(a);

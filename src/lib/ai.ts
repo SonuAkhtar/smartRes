@@ -1,10 +1,3 @@
-/**
- * AI integration module - calls Google Gemini API to tailor a resume to a job description.
- *
- * Requires VITE_GEMINI_API_KEY in .env.local.
- * Always falls back to local keyword analysis if the API is unavailable or fails.
- */
-
 import type {
   UserProfile,
   TailoredResume,
@@ -14,8 +7,6 @@ import type {
 } from "../types";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
-
-// ----- Local fallback -----
 
 const TECH_KW = [
   "react",
@@ -201,10 +192,8 @@ export function analyzeLocally(
   const skillsNorm = profile.skills.map(normalise);
   const skillsLower = profile.skills.map((s) => s.toLowerCase());
 
-  // ----- Matched skills ──
   let matchedSkills = profile.skills.filter((s) => skillMatchesJD(s, jdL));
 
-  // Fallback: if nothing matched, try matching TECH_KW that appear in both JD and resume
   if (matchedSkills.length === 0) {
     const resumeKws = TECH_KW.filter(
       (kw) => kwInText(kw, resumeL) && kwInText(kw, jdL),
@@ -212,7 +201,6 @@ export function analyzeLocally(
     matchedSkills = resumeKws.map(cap);
   }
 
-  // ----- Suggested skills (missing from profile but in JD) ──
   let suggestedSkills = TECH_KW.filter((kw) => {
     const inJD = kwInText(kw, jdL);
     const inProfile = skillsNorm.some(
@@ -224,7 +212,6 @@ export function analyzeLocally(
     .slice(0, 10)
     .map(cap);
 
-  // Fallback: extract capitalised terms from JD not in profile
   if (suggestedSkills.length === 0) {
     suggestedSkills = extractJDSkills(jd, skillsLower).slice(0, 8);
   }
@@ -233,7 +220,6 @@ export function analyzeLocally(
     (kw) => kwInText(kw, jdL) && !kwInText(kw, resumeL),
   );
 
-  // ----- Suggestions ──
   const suggestions: ResumeSuggestion[] = [];
 
   const summaryMissing = TECH_KW.filter(
@@ -289,7 +275,6 @@ export function analyzeLocally(
     });
   }
 
-  // Always ensure at least 2 suggestions
   if (suggestions.length === 0) {
     const jdTopKws = TECH_KW.filter((kw) => kwInText(kw, jdL))
       .slice(0, 5)
@@ -312,7 +297,6 @@ export function analyzeLocally(
     });
   }
 
-  // ----- Score ──
   const keywordOverlap = TECH_KW.filter(
     (kw) => kwInText(kw, jdL) && kwInText(kw, resumeL),
   ).length;
@@ -348,8 +332,6 @@ export function analyzeLocally(
     usedAI: false,
   };
 }
-
-// ----- Gemini API call -----─────────
 
 interface AIResponse {
   matchScore: number;
@@ -407,7 +389,6 @@ function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
-// Model names to try in order - first available wins
 const GEMINI_MODELS = [
   "gemini-2.0-flash",
   "gemini-1.5-flash",
@@ -444,7 +425,6 @@ async function callGemini(prompt: string, attempt = 0): Promise<AIResponse> {
       throw new Error("Gemini rate limit exceeded");
     }
 
-    // 401/403 = invalid API key - no point trying other models
     if (response.status === 401 || response.status === 403) {
       const errText = await response.text();
       throw new Error(
@@ -452,13 +432,11 @@ async function callGemini(prompt: string, attempt = 0): Promise<AIResponse> {
       );
     }
 
-    // 404 = model not found for this key - try next model
     if (response.status === 404) {
       lastError = `Model ${model} not available`;
       continue;
     }
 
-    // 400 may mean model-specific issue - try next model
     if (!response.ok) {
       const errText = await response.text();
       lastError = `Gemini API error ${response.status}: ${errText}`;
@@ -482,13 +460,6 @@ async function callGemini(prompt: string, attempt = 0): Promise<AIResponse> {
   throw new Error(lastError || "All Gemini models unavailable");
 }
 
-// ----- Public entry point -----─────
-
-/**
- * Tailor a resume to a job description.
- * Uses Gemini 2.0 Flash if VITE_GEMINI_API_KEY is set.
- * ALWAYS falls back to local keyword analysis on any failure - never throws.
- */
 export async function tailorResume(
   profile: UserProfile,
   resumeText: string,
@@ -516,17 +487,13 @@ export async function tailorResume(
         "Gemini API failed, using local analysis:",
         err instanceof Error ? err.message : err,
       );
-      // Always fall through to local analysis - never propagate the error to the UI
     }
   }
 
   return analyzeLocally(profile, resumeText, jd, company);
 }
 
-// ----- Interview Question Generator -----
-
 const FALLBACK_QUESTIONS: InterviewQuestion[] = [
-  // ----- Behavioral (13) -----──────
   {
     category: "behavioral",
     question:
@@ -606,7 +573,6 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
     tip: "Frame it as advocacy for quality or user experience, not resistance. Show how you proposed an alternative path forward.",
   },
 
-  // ----- Technical (13) -----───────
   {
     category: "technical",
     question:
@@ -685,7 +651,6 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
     tip: "Compare WebSockets, Server-Sent Events, and polling. Discuss connection management, fan-out, and failure recovery.",
   },
 
-  // ----- Situational (12) -----─────
   {
     category: "situational",
     question:
@@ -759,7 +724,6 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
     tip: "Use the strangler fig pattern or blue/green deployment. Dark launch, canary release, and a tested rollback plan are essential.",
   },
 
-  // ----- Role-specific (12) -----───
   {
     category: "role-specific",
     question: "What aspect of this role excites you most, and why?",

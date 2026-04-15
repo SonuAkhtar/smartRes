@@ -7,38 +7,24 @@
 }
 
 :root {
-  /* ═══════════════════════════════════════════════════════════════════
-     BRAND PALETTE
-     To retheme the entire app, edit the raw hex values below.
-     All semantic tokens and gradients reference these variables.
-     ─────────────────────────────────────────────────────────────────── */
+  --c-navy: #303c6c;
+  --c-blue: #4a5a9c;
+  --c-blue-mid: #7a8ab8;
+  --c-blue-pale: #b4dfe5;
+  --c-lavender: #d2fdff;
+  --c-blue-soft: #e8fdff;
 
-  /* - Indigo / Navy family - */
-  --c-navy: #303c6c;       /* primary brand indigo        */
-  --c-blue: #4a5a9c;       /* lighter indigo interactive  */
-  --c-blue-mid: #7a8ab8;   /* muted text / subtle accents */
-  --c-blue-pale: #b4dfe5;  /* sky-blue borders / dividers */
-  --c-lavender: #d2fdff;   /* light cyan surface tint     */
-  --c-blue-soft: #e8fdff;  /* page background             */
+  --c-deep: #303c6c;
+  --c-coral: #f4976c;
+  --c-rust: #c97042;
+  --c-sage: #b4dfe5;
+  --c-cream: #fbe8a6;
 
-  /* - Warm / Coral family - */
-  --c-deep: #303c6c;       /* deep indigo hero bg         */
-  --c-coral: #f4976c;      /* warm coral accent / CTA     */
-  --c-rust: #c97042;       /* darker coral hover          */
-  --c-sage: #b4dfe5;       /* sky-blue sage               */
-  --c-cream: #fbe8a6;      /* warm golden yellow surface  */
-
-  /* - Derived / extended - */
-  --c-navy-dark: #1f2847;  /* darker navy for hover       */
-  --c-navy-deep: #141932;  /* deepest navy for headings   */
-  --c-deep-dark: #141932;  /* darkest shade               */
-  --c-coral-dark: #d4734a; /* hover state for coral       */
-  --c-indigo: #303c6c;     /* alias for primary           */
-
-  /* ═══════════════════════════════════════════════════════════════════
-     SEMANTIC COLOR TOKENS
-     Reference brand palette vars - swap palette vars above, not here.
-     ─────────────────────────────────────────────────────────────────── */
+  --c-navy-dark: #1f2847;
+  --c-navy-deep: #141932;
+  --c-deep-dark: #141932;
+  --c-coral-dark: #d4734a;
+  --c-indigo: #303c6c;
 
   --color-primary: #303c6c;
   --color-primary-dark: #1f2847;
@@ -71,17 +57,10 @@
   --color-warning: #f59e0b;
   --color-warning-glow: rgba(245, 158, 11, 0.08);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     GRADIENTS
-     Use for backgrounds, cards, text fills, and decorative fills.
-     ─────────────────────────────────────────────────────────────────── */
-
-  /* Core brand */
   --gradient-primary: linear-gradient(135deg, #303c6c 0%, #4a5a9c 100%);
   --gradient-deep: linear-gradient(135deg, #182628 0%, #303c6c 100%);
   --gradient-navy: linear-gradient(135deg, #141932 0%, #303c6c 100%);
 
-  /* Hero / dark section backgrounds */
   --gradient-hero: linear-gradient(
     160deg,
     #0d1018 0%,
@@ -96,16 +75,13 @@
     #4a5a9c 100%
   );
 
-  /* Accent & warm */
   --gradient-accent: linear-gradient(135deg, #f4976c 0%, #fbe8a6 100%);
   --gradient-warm: linear-gradient(135deg, #fbe8a6 0%, #d2fdff 100%);
   --gradient-coral: linear-gradient(135deg, #f4976c 0%, #d4734a 100%);
 
-  /* Sky-blue / teal */
   --gradient-sage: linear-gradient(135deg, #b4dfe5 0%, #d2fdff 100%);
   --gradient-teal: linear-gradient(135deg, #303c6c 0%, #b4dfe5 100%);
 
-  /* Light surface */
   --gradient-surface: linear-gradient(145deg, #ffffff 0%, #d2fdff 100%);
   --gradient-card: linear-gradient(145deg, #ffffff 0%, #e8fdff 100%);
   --gradient-section: linear-gradient(
@@ -116,46 +92,24 @@
   );
   --gradient-section-alt: linear-gradient(135deg, #e8fdff 0%, #fbe8a6 100%);
 
-  /* Gradient text fill */
   --gradient-text: linear-gradient(135deg, #303c6c 0%, #f4976c 100%);
   --gradient-text-alt: linear-gradient(135deg, #303c6c 0%, #4a5a9c 100%);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     TYPOGRAPHY
-     To swap fonts globally: change family names here and update
-     the <link> in index.html with the new Google Fonts URL.
-     ─────────────────────────────────────────────────────────────────── */
-
-  /* ─── FONT FAMILIES ─────────────────────────────────────────────────
-     4 typefaces for visual dynamism:
-     --font-display  → Syne (bold geometric sans)  — header logo, footer wordmark, nav, buttons
-     --font-serif    → Fraunces (elegant variable serif) — hero headlines, editorial sections, testimonials
-     --font-body     → DM Sans (clean humanist sans) — body text, UI chrome, descriptions
-     --font-mono     → JetBrains Mono — stats counters, badges, code
-     ─────────────────────────────────────────────────────────────────── */
   --font-display: "Syne", system-ui, sans-serif;
   --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  /* ═══════════════════════════════════════════════════════════════════
-     TYPE SCALE
-     ─────────────────────────────────────────────────────────────────── */
-
-  --text-xs: 0.75rem; /* 12px */
-  --text-sm: 0.8125rem; /* 13px */
-  --text-base: 0.9375rem; /* 15px */
-  --text-md: 1rem; /* 16px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 1.875rem; /* 30px */
-  --text-4xl: 2.25rem; /* 36px */
-
-  /* ═══════════════════════════════════════════════════════════════════
-     RADII
-     ─────────────────────────────────────────────────────────────────── */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -163,10 +117,6 @@
   --radius-xl: 20px;
   --radius-2xl: 28px;
   --radius-full: 9999px;
-
-  /* ═══════════════════════════════════════════════════════════════════
-     SHADOWS  (tinted with navy for brand coherence)
-     ─────────────────────────────────────────────────────────────────── */
 
   --shadow-xs: 0 1px 2px rgba(26, 34, 69, 0.06);
   --shadow-sm:
@@ -181,56 +131,33 @@
   --shadow-glow: 0 0 40px rgba(48, 60, 108, 0.18);
   --shadow-accent: 0 8px 24px rgba(244, 151, 108, 0.28);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     MOTION
-     ─────────────────────────────────────────────────────────────────── */
-
   --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ═══════════════════════════════════════════════════════════════════
-     LAYOUT
-     ─────────────────────────────────────────────────────────────────── */
-
   --header-height: 68px;
   --page-min-height: calc(100vh - var(--header-height));
 
-  /* ═══════════════════════════════════════════════════════════════════
-     HOMEPAGE PALETTE  (light defaults)
-     Theme-aware variables scoped to home page sections and cards.
-     ─────────────────────────────────────────────────────────────────── */
-
-  /* Section backgrounds */
   --home-bg:              #f0ecff;
   --home-bg-alt:          #ebe6ff;
 
-  /* Card surfaces */
   --home-card:            #ffffff;
   --home-card-border:     rgba(180, 223, 229, 0.4);
 
-  /* Typography on home cards */
   --home-card-text:       #1a1f3a;
   --home-card-text-muted: rgba(26, 31, 58, 0.72);
   --home-card-text-light: rgba(26, 31, 58, 0.54);
 
-  /* Accent colors */
   --home-accent:          #f4976c;
   --home-accent-bright:   #fbe8a6;
 }
 
-/* Use dynamic viewport height on mobile so browser chrome show/hide doesn't cause overflow */
 @media (max-width: 768px) {
   :root {
     --page-min-height: calc(100dvh - var(--header-height));
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   DARK THEME OVERRIDES
-   Only override tokens that need to change in dark mode.
-   Brand palette vars stay the same - only semantic tokens change.
-   ─────────────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
   --color-bg: #182628;
   --color-surface: #1e3336;
@@ -268,7 +195,6 @@
   --shadow-primary: 0 8px 24px rgba(101, 204, 184, 0.28);
   --shadow-glow: 0 0 40px rgba(101, 204, 184, 0.18);
 
-  /* Homepage dark palette */
   --home-bg:              #182628;
   --home-bg-alt:          #1e3336;
   --home-card:            #1e3336;
@@ -280,7 +206,6 @@
   --home-accent-bright:   #57ba98;
 }
 
-/*----- Base -----*/
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -307,7 +232,6 @@ button {
   border: none;
 }
 
-/* Global focus-visible ring */
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -336,7 +260,6 @@ img {
   min-height: 100vh;
 }
 
-/*----- Utility -----*/
 .gradient-text {
   background: var(--gradient-text);
   -webkit-background-clip: text;
@@ -344,7 +267,6 @@ img {
   -webkit-text-fill-color: transparent;
 }
 
-/*----- App loading screen -----*/
 .app-loading {
   position: fixed;
   inset: 0;
@@ -429,12 +351,10 @@ img {
   }
 }
 
-/*----- App intro loading screen (0% → 100%) -----*/
 .app-intro {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  /* Theme-aware gradient: adapts to light/dark via CSS vars */
   background:
     radial-gradient(
       ellipse 70% 60% at 50% 45%,
@@ -447,7 +367,6 @@ img {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Fade in so it doesn't flash abruptly */
   animation: appIntroIn 0.2s ease forwards;
 }
 

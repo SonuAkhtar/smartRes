@@ -28,7 +28,7 @@ const NavIcon = ({ d }: { d: string }) => (
 
 export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const navigate = useNavigate()
-  const { signOut } = useAuth()
+  const { logout } = useAuth()
   const { toggleTheme, theme } = useTheme()
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
@@ -131,7 +131,7 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
       id: 'signout', label: 'Sign Out',
       description: 'Sign out of your account',
       icon: <NavIcon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />,
-      action: () => { signOut(); onClose() },
+      action: () => { logout(); onClose() },
       keywords: ['logout', 'exit'],
     },
   ]

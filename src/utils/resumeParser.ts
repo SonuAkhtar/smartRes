@@ -1,5 +1,4 @@
 import * as pdfjsLib from "pdfjs-dist";
-// Vite ?url import resolves to the hashed asset URL at build time - no CDN required
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
@@ -30,11 +29,8 @@ export interface ParsedFields {
   duration?: string;
   jobDesc?: string;
   yearsOfExperience?: string;
-  /** Up to 5 parsed work experience entries */
   experiences?: ParsedExperience[];
 }
-
-// ----- Text Extraction ──────────────────────────────────────
 
 export async function extractTextFromFile(file: File): Promise<string> {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
@@ -67,8 +63,6 @@ async function extractFromDOCX(file: File): Promise<string> {
   const result = await mammoth.extractRawText({ arrayBuffer: buffer });
   return result.value;
 }
-
-// ----- Preprocessing ────────────────────────────────────────
 
 const KNOWN_HEADERS = [
   "professional summary",
@@ -137,8 +131,6 @@ function preprocessText(raw: string): string {
   return text;
 }
 
-// ----- Section Splitter ─────────────────────────────────────
-
 function getSectionText(text: string, headers: string[]): string {
   const lower = text.toLowerCase();
   const escaped = headers.map((h) => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
@@ -175,14 +167,11 @@ function toTitleCase(s: string): string {
     .join(" ");
 }
 
-// ----- Multi-Experience Parser ──────────────────────────
-
 function splitExperienceBlocks(
   expRaw: string,
-  datePattern: RegExp,
+  _datePattern: RegExp,
   titlePattern: RegExp,
 ): string[] {
-  // Pass 1: split on blank lines (2+ newlines)
   const byDouble = expRaw
     .split(/\n{2,}/)
     .map((b) => b.trim())
@@ -190,9 +179,6 @@ function splitExperienceBlocks(
 
   if (byDouble.length >= 2) return byDouble;
 
-  // Pass 2: PDF text often uses only single newlines between job entries.
-  // Re-split line-by-line: a new entry begins when we see a line that looks
-  // like a job-title/company line and we already have content accumulated.
   const lines = expRaw.split("\n");
   const blocks: string[] = [];
   let current: string[] = [];
@@ -203,17 +189,13 @@ function splitExperienceBlocks(
     const hasContent = current.some((l) => l.trim().length > 15);
     const isNewEntry =
       hasContent &&
-      // "Company Name | Jan 2022 – Present" or "Company Name – Jan 2022"
       (/^[A-Za-z][A-Za-z\s,\.\&]+\s*[|–\-]\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\d{4})/i.test(
         t,
       ) ||
-        // Bare year range at start of line: "2020 – 2022" / "2022 - Present"
         /^\d{4}\s*[-–]\s*(?:\d{4}|present|current|now)/i.test(t) ||
-        // Month-year range at start of line: "Jan 2020 – Dec 2022"
         /^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{2,4}\s*[-–]/i.test(
           t,
         ) ||
-        // Title pattern at start with a preceding non-empty group
         (current.length >= 3 && titlePattern.test(t) && /^[A-Z]/.test(t)));
 
     if (isNewEntry) {
@@ -250,7 +232,6 @@ function parseExperienceBlocks(
     const dateMatch = block.match(datePattern);
     const titleMatch = block.match(titlePattern);
 
-    // Need at least a date range or a recognisable job title
     if (!dateMatch && !titleMatch) continue;
 
     const duration = dateMatch ? dateMatch[0].trim() : "";
@@ -258,7 +239,6 @@ function parseExperienceBlocks(
       ? titleMatch[1].trim().replace(/\s+/g, " ").slice(0, 60)
       : "";
 
-    // Company: a capitalised line that is neither the title nor a date
     let company = "";
     const titleSlug = title.toLowerCase().slice(0, 10);
     const durSlug = duration.slice(0, 6);
@@ -300,7 +280,6 @@ function parseExperienceBlocks(
       .slice(0, 400)
       .trim();
 
-    // Deduplicate: skip if we already have an entry with same company
     if (
       results.some(
         (r) =>
@@ -316,8 +295,6 @@ function parseExperienceBlocks(
   return results;
 }
 
-// ----- Main Parser ──────────────────────────────────────────
-
 export function parseResumeText(raw: string): ParsedFields {
   const result: ParsedFields = {};
 
@@ -327,19 +304,16 @@ export function parseResumeText(raw: string): ParsedFields {
     .map((l) => l.trim())
     .filter(Boolean);
 
-  // ----- Email -----──
   const emailMatch = text.match(
     /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}/,
   );
   if (emailMatch) result.email = emailMatch[0].trim();
 
-  // ----- Phone -----──
   const phoneMatch = text.match(
     /(?:\+\d{1,3}[\s.\-]?)?(?:\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}|\d{10})/,
   );
   if (phoneMatch) result.phone = phoneMatch[0].replace(/\s+/g, " ").trim();
 
-  // ----- LinkedIn ────────────────────────────────────────────
   const liMatch = text.match(
     /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/(?:in|pub)\/[\w\-_%]+(?:\/[\w\-_%]+)*/i,
   );
@@ -348,7 +322,6 @@ export function parseResumeText(raw: string): ParsedFields {
     result.linkedIn = url.startsWith("http") ? url : `https://${url}`;
   }
 
-  // ----- GitHub -----─
   const ghMatch = text.match(
     /(?:https?:\/\/)?(?:www\.)?github\.com\/[\w\-._]+/i,
   );
@@ -357,7 +330,6 @@ export function parseResumeText(raw: string): ParsedFields {
     result.github = url.startsWith("http") ? url : `https://${url}`;
   }
 
-  // ----- Portfolio / personal site ────────────────────────────
   const portPatterns = [
     /(?:https?:\/\/)?(?:www\.)?(?:gitlab\.com|behance\.net|dribbble\.com)\/[\w\-._]+/i,
     /(?:https?:\/\/)?[\w\-]+\.(?:io|dev|me|site|app|xyz|online|tech)(?:\/[\w\-._/]+)?(?=[\s,|]|$)/i,
@@ -371,7 +343,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // ----- Name -----───
   const roleKeywords =
     /engineer|developer|manager|designer|analyst|consultant|specialist|architect|intern|director|officer|scientist|executive|founder|leader|head\b/i;
 
@@ -390,7 +361,6 @@ export function parseResumeText(raw: string): ParsedFields {
     return null;
   };
 
-  // Strategy 1: first 12 lines
   for (const line of lines.slice(0, 12)) {
     const name = isNameLike(line);
     if (name) {
@@ -399,7 +369,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // Strategy 2: line immediately before the email line
   if (!result.name && result.email) {
     const emailLineIdx = lines.findIndex((l) =>
       l.toLowerCase().includes(result.email!.toLowerCase()),
@@ -410,7 +379,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // Strategy 3: split a header line that contains the email to find the name part
   if (!result.name) {
     for (const line of lines.slice(0, 8)) {
       if (
@@ -435,8 +403,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // ----- Location ────────────────────────────────────────────
-  // Explicit label first
   const locLabelMatch = text.match(
     /(?:location|address|based\s+in|city)[:\s]+([A-Z][a-zA-Z\s,.\-]{3,60}?)(?=\s*(?:\||•|\n|$))/i,
   );
@@ -461,7 +427,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // ----- Summary / Objective ─────────────────────────────────
   const summaryRaw = getSectionText(text, [
     "professional summary",
     "career summary",
@@ -479,7 +444,6 @@ export function parseResumeText(raw: string): ParsedFields {
     result.summary = summaryRaw.replace(/\s+/g, " ").slice(0, 700).trim();
   }
 
-  // Fallback: first multi-sentence paragraph that isn't a list or date block
   if (!result.summary) {
     for (const para of text.split(/\n{2,}/).map((p) => p.trim())) {
       if (
@@ -498,8 +462,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // ----- Skills -----─
-  // Step 1: parse explicit skills section
   const skillsRaw = getSectionText(text, [
     "technical skills",
     "core competencies",
@@ -552,7 +514,6 @@ export function parseResumeText(raw: string): ParsedFields {
       );
   }
 
-  // Step 2: inline "Skills: a, b, c" pattern as fallback for section parsing
   if (sectionSkills.length === 0) {
     const inlineMatch = text.match(
       /(?:skills?|competencies|expertise|proficiencies|technologies)[\s:–-]+([^\n]{10,300})/i,
@@ -567,11 +528,7 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // Step 3: comprehensive keyword scan across the ENTIRE resume text.
-  // Runs always - catches skills mentioned in experience bullets, projects, etc.
-  // that may not appear in a dedicated skills section.
   const TECH_SKILLS: Array<{ name: string; re: RegExp }> = [
-    // ── Languages ──────────────────────────────────────────────
     { name: "Python", re: /\bpython\b/i },
     { name: "JavaScript", re: /\bjavascript\b/i },
     { name: "TypeScript", re: /\btypescript\b/i },
@@ -599,7 +556,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Lua", re: /\blua\b/i },
     { name: "Elixir", re: /\belixir\b/i },
     { name: "Clojure", re: /\bclojure\b/i },
-    // ── Web Frameworks ─────────────────────────────────────────
     { name: "React", re: /\breact(?:\.js)?\b(?!\s+native)/i },
     { name: "Next.js", re: /\bnext(?:\.js)?\b/i },
     { name: "Vue.js", re: /\bvue(?:\.js)?\b/i },
@@ -624,7 +580,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Actix", re: /\bactix\b/i },
     { name: "Hono", re: /\bhono\b(?=[\s,])/i },
     { name: "tRPC", re: /\btrpc\b/i },
-    // ── Mobile ─────────────────────────────────────────────────
     { name: "React Native", re: /\breact\s+native\b/i },
     { name: "Flutter", re: /\bflutter\b/i },
     { name: "SwiftUI", re: /\bswiftui\b/i },
@@ -632,7 +587,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Expo", re: /\bexpo\b(?=[\s,])/i },
     { name: "Ionic", re: /\bionic\b/i },
     { name: "Capacitor", re: /\bcapacitor\b/i },
-    // ── AI / ML / LLM ──────────────────────────────────────────
     { name: "TensorFlow", re: /\btensorflow\b/i },
     { name: "PyTorch", re: /\bpytorch\b/i },
     { name: "Keras", re: /\bkeras\b/i },
@@ -662,7 +616,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Copilot", re: /\bcopilot\b/i },
     { name: "Vertex AI", re: /\bvertex\s+ai\b/i },
     { name: "SageMaker", re: /\bsagemaker\b/i },
-    // ── Data Engineering ───────────────────────────────────────
     { name: "Pandas", re: /\bpandas\b/i },
     { name: "NumPy", re: /\bnumpy\b/i },
     { name: "Matplotlib", re: /\bmatplotlib\b/i },
@@ -682,7 +635,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Snowflake", re: /\bsnowflake\b/i },
     { name: "BigQuery", re: /\bbigquery\b/i },
     { name: "Databricks", re: /\bdatabricks\b/i },
-    // ── Databases ──────────────────────────────────────────────
     { name: "PostgreSQL", re: /\bpostgresql\b|\bpostgres\b/i },
     { name: "MySQL", re: /\bmysql\b/i },
     { name: "MongoDB", re: /\bmongodb\b/i },
@@ -700,7 +652,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Neo4j", re: /\bneo4j\b/i },
     { name: "CockroachDB", re: /\bcockroachdb\b/i },
     { name: "PlanetScale", re: /\bplanetscale\b/i },
-    // ── API / Protocols ────────────────────────────────────────
     { name: "GraphQL", re: /\bgraphql\b/i },
     { name: "REST API", re: /\brest(?:ful)?\s*api\b/i },
     { name: "gRPC", re: /\bgrpc\b/i },
@@ -708,7 +659,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "WebRTC", re: /\bwebrtc\b/i },
     { name: "OAuth", re: /\boauth\b/i },
     { name: "JWT", re: /\bjwt\b/i },
-    // ── Cloud & DevOps ─────────────────────────────────────────
     { name: "AWS", re: /\baws\b|\bamazon\s+web\s+services\b/i },
     { name: "Google Cloud", re: /\bgcp\b|\bgoogle\s+cloud\b/i },
     { name: "Azure", re: /\bazure\b/i },
@@ -727,7 +677,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Nginx", re: /\bnginx\b/i },
     { name: "Pulumi", re: /\bpulumi\b/i },
     { name: "CI/CD", re: /\bci\/cd\b|\bcontinuous\s+integration\b/i },
-    // ── Testing ────────────────────────────────────────────────
     { name: "Jest", re: /\bjest\b/i },
     { name: "Pytest", re: /\bpytest\b/i },
     { name: "Cypress", re: /\bcypress\b/i },
@@ -737,7 +686,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Vitest", re: /\bvitest\b/i },
     { name: "Mocha", re: /\bmocha\b/i },
     { name: "Chai", re: /\bchai\b/i },
-    // ── UI / Styling ───────────────────────────────────────────
     { name: "Tailwind CSS", re: /\btailwind(?:\s*css)?\b/i },
     { name: "Sass", re: /\bsass\b|\bscss\b/i },
     { name: "Material UI", re: /\bmaterial[\s-]ui\b|\bmui\b/i },
@@ -749,13 +697,11 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Framer Motion", re: /\bframer\s+motion\b/i },
     { name: "Three.js", re: /\bthree(?:\.js)?\b/i },
     { name: "D3.js", re: /\bd3(?:\.js)?\b/i },
-    // ── State Management ───────────────────────────────────────
     { name: "Redux", re: /\bredux\b/i },
     { name: "Zustand", re: /\bzustand\b/i },
     { name: "MobX", re: /\bmobx\b/i },
     { name: "Jotai", re: /\bjotai\b/i },
     { name: "Recoil", re: /\brecoil\b/i },
-    // ── Tools & Platforms ──────────────────────────────────────
     { name: "Git", re: /\bgit\b(?!hub|lab)/i },
     { name: "GitHub", re: /\bgithub\b/i },
     { name: "GitLab", re: /\bgitlab\b(?!\s*ci)/i },
@@ -782,7 +728,6 @@ export function parseResumeText(raw: string): ParsedFields {
     { name: "Stripe", re: /\bstripe\b/i },
     { name: "Twilio", re: /\btwilio\b/i },
     { name: "SendGrid", re: /\bsendgrid\b/i },
-    // ── Process ────────────────────────────────────────────────
     { name: "Agile", re: /\bagile\b/i },
     { name: "Scrum", re: /\bscrum\b/i },
     { name: "Microservices", re: /\bmicroservices?\b/i },
@@ -799,7 +744,6 @@ export function parseResumeText(raw: string): ParsedFields {
     }
   }
 
-  // Merge: section-based skills first (higher signal), then keyword skills not already covered
   const sectionLower = new Set(sectionSkills.map((s) => s.toLowerCase()));
   const merged = [
     ...sectionSkills,
@@ -810,7 +754,6 @@ export function parseResumeText(raw: string): ParsedFields {
     result.skills = merged.slice(0, 40);
   }
 
-  // ----- Education ────────────────────────────────────────────
   const eduRaw = getSectionText(text, [
     "education",
     "educational background",
@@ -822,7 +765,6 @@ export function parseResumeText(raw: string): ParsedFields {
     const degreePatterns = [
       /(?:doctor(?:ate)?|ph\.?\s*d\.?)(?:\s+(?:in|of)\s+[\w\s()&,/]{2,60})?/i,
       /(?:master(?:'?s)?(?:\s+of\s+[\w\s()&,/]{2,50})?|m\.?\s*tech\.?|m\.?\s*eng\.?|m\.?\s*sc\.?|m\.?\s*[bat]\.?|mba)(?:\s+(?:in|of)\s+[\w\s()&,/]{2,60})?/i,
-      // Includes 'e' for B.E., 'com' for B.Com, also parens like "B.Tech (CSE)"
       /(?:bachelor(?:'?s)?(?:\s+of\s+[\w\s()&,/]{2,50})?|b\.?\s*tech\.?|b\.?\s*eng\.?|b\.?\s*[sbate]\.?|b\.?\s*com\.?|be\b|bs\b|ba\b)(?:\s*[-–(]?\s*(?:in\s+|of\s+)?[\w\s()&,/]{2,60})?/i,
       /(?:associate(?:'?s)?\s+(?:of|in)\s+[\w\s]{2,50}|a\.?\s*[sa]\.?)(?:\s+(?:in|of)\s+[\w\s()&,/]{2,50})?/i,
       /(?:high\s+school\s+diploma|diploma|certificate)(?:\s+(?:in|of)\s+[\w\s()&,/]{2,50})?/i,
@@ -835,7 +777,6 @@ export function parseResumeText(raw: string): ParsedFields {
       }
     }
 
-    // If degree found but missing major/field, try to detect it in the edu section
     if (
       result.degree &&
       !/computer|engineering|science|technology|business|arts|commerce|management|information|mathematics|electronics|mechanical|civil|electrical|data|finance|economics|physics|chemistry|biology/i.test(
@@ -858,7 +799,6 @@ export function parseResumeText(raw: string): ParsedFields {
     if (years) result.gradYear = years[years.length - 1];
   }
 
-  // ----- Work Experience ──────────────────────────────────────
   const expRaw = getSectionText(text, [
     "professional experience",
     "work experience",
@@ -933,7 +873,6 @@ export function parseResumeText(raw: string): ParsedFields {
       else result.yearsOfExperience = "10+ years";
     }
 
-    // ----- Parse up to 5 experience entries ─────────────────
     result.experiences = parseExperienceBlocks(
       expRaw,
       titlePattern,
@@ -941,7 +880,6 @@ export function parseResumeText(raw: string): ParsedFields {
     );
   }
 
-  // ----- Title -----───
   if (result.jobTitle) {
     result.title = result.jobTitle;
   } else {

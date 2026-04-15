@@ -66,8 +66,6 @@ export interface JobEntry {
   createdAt: string;
 }
 
-// ----- Job Application Tracker ──────────────────────────────
-
 export type ApplicationStatus =
   | "saved"
   | "applied"
@@ -88,8 +86,6 @@ export interface JobApplication {
   createdAt: string;
   updatedAt: string;
 }
-
-// ----- Interview Prep ───────────────────────────────────────
 
 export type QuestionCategory =
   | "behavioral"

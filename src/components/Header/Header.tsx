@@ -4,7 +4,6 @@ import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import "./Header.css";
 
-// ----- Sub-nav groups -----
 const AI_TOOLS = [
   {
     to: "/job-matcher",
@@ -118,7 +117,6 @@ const CHEVRON = (
   </svg>
 );
 
-// ----- Component -----──────
 export default function Header() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -137,7 +135,6 @@ export default function Header() {
 
   const isHome = location.pathname === "/";
 
-  // Active group helpers
   const aiActive = AI_TOOLS.some((l) => location.pathname === l.to);
   const trackActive = TRACKER.some((l) => location.pathname === l.to);
 
@@ -153,14 +150,12 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close everything on route change
   useEffect(() => {
     setMobileOpen(false);
     setDropdownOpen(false);
     setOpenSubnav(null);
   }, [location.pathname]);
 
-  // Close avatar dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (
@@ -173,7 +168,6 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Close desktop sub-navs on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node))
@@ -183,7 +177,6 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Mobile: body scroll lock
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
@@ -191,7 +184,6 @@ export default function Header() {
     };
   }, [mobileOpen]);
 
-  // Escape key
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -204,7 +196,6 @@ export default function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // Close mobile on resize
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 768) setMobileOpen(false);
@@ -232,7 +223,6 @@ export default function Header() {
 
   return (
     <header className={headerClass}>
-      {/* Scroll progress bar */}
       <div className="header_progress-track">
         <div
           className="header_progress-fill"
@@ -241,13 +231,11 @@ export default function Header() {
       </div>
 
       <div className="header_container">
-        {/* Logo */}
         <Link to="/" className="header_logo">
           <span className="header_logo-wordmark">SmartRes</span>
           <span className="header_logo-monogram">SR</span>
         </Link>
 
-        {/* ----- Desktop / Mobile nav ----- */}
         <nav
           id="header-mobile-nav"
           ref={navRef}
@@ -255,7 +243,6 @@ export default function Header() {
         >
           {user ? (
             <>
-              {/* Dashboard - standalone */}
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
@@ -265,7 +252,6 @@ export default function Header() {
                 Dashboard
               </NavLink>
 
-              {/* AI Tools group */}
               <div
                 className="header_subnav-group"
                 onMouseEnter={() => setOpenSubnav("ai")}
@@ -282,7 +268,6 @@ export default function Header() {
                   {CHEVRON}
                 </button>
 
-                {/* Desktop panel */}
                 <div
                   className={`header_subnav-panel ${openSubnav === "ai" ? "header_subnav-panel-open" : ""}`}
                 >
@@ -307,7 +292,6 @@ export default function Header() {
                   ))}
                 </div>
 
-                {/* Mobile accordion */}
                 {mobileSubnav === "ai" && (
                   <div className="header_subnav-mobile">
                     {AI_TOOLS.map((item) => (
@@ -327,7 +311,6 @@ export default function Header() {
                 )}
               </div>
 
-              {/* Tracker group */}
               <div
                 className="header_subnav-group"
                 onMouseEnter={() => setOpenSubnav("tracker")}
@@ -346,7 +329,6 @@ export default function Header() {
                   {CHEVRON}
                 </button>
 
-                {/* Desktop panel */}
                 <div
                   className={`header_subnav-panel ${openSubnav === "tracker" ? "header_subnav-panel-open" : ""}`}
                 >
@@ -371,7 +353,6 @@ export default function Header() {
                   ))}
                 </div>
 
-                {/* Mobile accordion */}
                 {mobileSubnav === "tracker" && (
                   <div className="header_subnav-mobile">
                     {TRACKER.map((item) => (
@@ -397,7 +378,6 @@ export default function Header() {
             </Link>
           )}
 
-          {/* Mobile: user section */}
           {user && (
             <div className="header_user-mobile">
               <div className="header_user-mobile-info">
@@ -490,7 +470,6 @@ export default function Header() {
           )}
         </nav>
 
-        {/* ----- Desktop avatar dropdown ----- */}
         {user && (
           <div className="header_avatar-wrapper" ref={dropdownRef}>
             <button
@@ -660,7 +639,6 @@ export default function Header() {
           </div>
         )}
 
-        {/* Hamburger */}
         <button
           className={`header_hamburger ${mobileOpen ? "header_hamburger-open" : ""}`}
           onClick={() => setMobileOpen((v) => !v)}
@@ -674,7 +652,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile backdrop */}
       {mobileOpen && (
         <div
           className="header_backdrop"

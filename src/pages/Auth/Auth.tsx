@@ -9,7 +9,7 @@ type Tab = "signin" | "signup";
 
 interface PasswordStrength {
   label: string;
-  score: number; // 0–4
+  score: number;
   color: string;
 }
 
@@ -208,7 +208,6 @@ export default function Auth() {
                     tab === "signin" ? "current-password" : "new-password"
                   }
                 />
-                {/* Password strength indicator - signup only */}
                 {tab === "signup" && strength && strength.score > 0 && (
                   <div className="auth_strength">
                     <div className="auth_strength-bar">

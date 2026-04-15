@@ -153,7 +153,6 @@ export default function JobMatcher() {
     <div className="job-matcher">
       <div className="job-matcher_bg" />
       <div className="job-matcher_layout">
-        {/* History sidebar - desktop */}
         {recentHistory.length > 0 && (
           <aside
             className={`job-matcher_history-sidebar ${historySidebarOpen ? "job-matcher_history-sidebar-open" : ""}`}
@@ -230,7 +229,6 @@ export default function JobMatcher() {
 
           {!result ? (
             <div className="job-matcher_card">
-              {/* Company field */}
               <div className="job-matcher_company-row">
                 <label className="job-matcher_label job-matcher_label-sm">
                   Company Name
@@ -252,7 +250,6 @@ export default function JobMatcher() {
                     Paste the full JD for best results
                   </span>
                 </label>
-                {/* Clipboard paste helper */}
                 {!jd && (
                   <button
                     className="job-matcher_paste-btn"
@@ -355,7 +352,6 @@ export default function JobMatcher() {
               initial="hidden"
               animate="visible"
             >
-              {/* Local analysis notice */}
               {result.usedAI === false && (
                 <motion.div
                   className="job-matcher_local-notice"
@@ -394,7 +390,6 @@ export default function JobMatcher() {
                 </motion.div>
               )}
 
-              {/* Score card */}
               <motion.div
                 className="job-matcher_score-card"
                 variants={resultSection}
@@ -439,7 +434,6 @@ export default function JobMatcher() {
                 </div>
               </motion.div>
 
-              {/* What to change in your resume */}
               <motion.div
                 className="job-matcher_section"
                 variants={resultSection}
@@ -503,7 +497,6 @@ export default function JobMatcher() {
                 )}
               </motion.div>
 
-              {/* Matched skills */}
               <motion.div
                 className="job-matcher_section"
                 variants={resultSection}
@@ -538,7 +531,6 @@ export default function JobMatcher() {
                 )}
               </motion.div>
 
-              {/* Suggested skills */}
               <motion.div
                 className="job-matcher_section"
                 variants={resultSection}
@@ -572,7 +564,6 @@ export default function JobMatcher() {
                 )}
               </motion.div>
 
-              {/* Tailored summary */}
               <motion.div
                 className="job-matcher_section"
                 variants={resultSection}

@@ -1,11 +1,7 @@
 import { supabase } from "./supabase";
 import type { UserProfile, JobEntry, JobApplication } from "../types";
 
-// ----- Profile -----─
-
 export async function loadProfile(userId: string): Promise<UserProfile | null> {
-  // .maybeSingle() returns null data (no error) when 0 rows exist,
-  // avoiding the 406 that .single() throws for a missing profile row.
   const { data, error } = await supabase
     .from("profiles")
     .select("data")
@@ -26,8 +22,6 @@ export async function saveProfile(
   });
   if (error) console.error("saveProfile:", error.message);
 }
-
-// ----- Job History ──────────────────────────────────────────
 
 export async function loadJobHistory(userId: string): Promise<JobEntry[]> {
   const { data, error } = await supabase
@@ -56,9 +50,6 @@ export async function removeJobEntry(jobId: string): Promise<void> {
   const { error } = await supabase.from("job_history").delete().eq("id", jobId);
   if (error) console.error("removeJobEntry:", error.message);
 }
-
-// ----- Job Applications ─────────────────────────────────────
-// Requires table: job_applications (id text PK, user_id uuid, data jsonb, created_at timestamptz)
 
 export async function loadApplications(
   userId: string,

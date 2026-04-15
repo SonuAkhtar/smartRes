@@ -9,7 +9,6 @@ import "./Home.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Intro loading screen ──────────────────────────────────────
 function AppIntro({ onDone }: { onDone: () => void }) {
   const [pct, setPct] = useState(0);
   const [exiting, setExiting] = useState(false);
@@ -23,7 +22,6 @@ function AppIntro({ onDone }: { onDone: () => void }) {
 
     const tick = (now: number) => {
       const t = Math.min((now - start) / duration, 1);
-      // Ease-out quad: shoots up fast, settles near 100
       const eased = 1 - Math.pow(1 - t, 2);
       setPct(Math.round(eased * 100));
       if (t < 1) {
@@ -53,29 +51,6 @@ function AppIntro({ onDone }: { onDone: () => void }) {
   );
 }
 
-// ── Marquee ───────────────────────────────────────────────────
-const MARQUEE_ITEMS = [
-  "Google",
-  "Senior Engineer",
-  "Meta",
-  "Product Manager",
-  "Stripe",
-  "Data Scientist",
-  "Airbnb",
-  "DevOps Engineer",
-  "Netflix",
-  "UI Designer",
-  "Spotify",
-  "Backend Developer",
-  "Figma",
-  "ML Engineer",
-  "Notion",
-  "Full-Stack Developer",
-  "Linear",
-  "Cloud Architect",
-];
-
-// ── App carousel ──────────────────────────────────────────────
 const SLIDE_DURATION = 4200;
 const APP_SLIDES = [
   { id: "matcher", label: "Job Matcher" },
@@ -115,7 +90,6 @@ const TRACKER_APPS = [
   },
 ] as const;
 
-// ── Features ──────────────────────────────────────────────────
 const features: Array<{
   icon: ReactNode;
   title: string;
@@ -199,7 +173,6 @@ const features: Array<{
   },
 ];
 
-// ── Testimonials ──────────────────────────────────────────────
 const testimonials = [
   {
     text: "I tailored my resume to 3 different roles in under 20 minutes. Got callbacks from all three. The AI matching is genuinely useful, not just buzzwords.",
@@ -227,7 +200,6 @@ const testimonials = [
   },
 ];
 
-// ── Steps ─────────────────────────────────────────────────────
 const steps = [
   {
     number: "01",
@@ -255,7 +227,6 @@ const steps = [
   },
 ];
 
-// ── Stats ─────────────────────────────────────────────────────
 const stats = [
   { numeric: 10, suffix: "K+", label: "Resumes Created" },
   { numeric: 3, suffix: "×", label: "More Interview Calls" },
@@ -263,7 +234,6 @@ const stats = [
   { numeric: 98, suffix: "%", label: "ATS-Friendly Rate" },
 ];
 
-// ── ParticleCanvas (Feature B) ────────────────────────────────
 function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -330,7 +300,6 @@ function ParticleCanvas() {
   );
 }
 
-// ── StatCounter ───────────────────────────────────────────────
 function StatCounter({ numeric, suffix }: { numeric: number; suffix: string }) {
   const [displayed, setDisplayed] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -370,17 +339,14 @@ function StatCounter({ numeric, suffix }: { numeric: number; suffix: string }) {
   );
 }
 
-// ── Home page ─────────────────────────────────────────────────
 export default function Home() {
   const { user } = useAuth();
   const [showIntro, setShowIntro] = useState(true);
 
-  // ── Carousel auto-advance ──────────────────────────────────
   const [slideIdx, setSlideIdx] = useState(0);
   const [slideProgress, setSlideProgress] = useState(0);
 
   useEffect(() => {
-    setSlideProgress(0);
     const start = performance.now();
     let rafId: number;
     const tick = (now: number) => {
@@ -396,14 +362,12 @@ export default function Home() {
     return () => cancelAnimationFrame(rafId);
   }, [slideIdx]);
 
-  // ── E: Feature card spotlight ──────────────────────────────
   const handleSpotlight = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
   }, []);
 
-  // ── GSAP scroll animations ─────────────────────────────────
   useEffect(() => {
     const ctx = gsap.context(() => {
       const heroEls = gsap.utils.toArray<HTMLElement>(".home_hero-content > *");
@@ -419,7 +383,6 @@ export default function Home() {
           delay: 0.15,
         },
       );
-      // Accent wordmark: per-character stagger (footer-style reveal)
       gsap.set(".home_hero-accent-char", { opacity: 0, y: 32, rotateX: -55 });
       gsap.to(".home_hero-accent-char", {
         opacity: 1,
@@ -551,10 +514,8 @@ export default function Home() {
   return (
     <main className="home">
       {showIntro && <AppIntro onDone={() => setShowIntro(false)} />}
-      {/* ── Hero ─────────────────────────────────────────── */}
       <section className="home_hero">
         <div className="home_hero-bg">
-          {/* B: Particle field */}
           <ParticleCanvas />
         </div>
 
@@ -608,10 +569,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* App screen carousel */}
         <div className="home_hero-visual">
           <div className="home_app-window">
-            {/* macOS-style chrome */}
             <div className="home_app-chrome">
               <span className="home_app-chrome-dot home_app-chrome-dot--red" />
               <span className="home_app-chrome-dot home_app-chrome-dot--yellow" />
@@ -621,9 +580,7 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Slides */}
             <div className="home_app-slides">
-              {/* Slide 0: Job Matcher */}
               <div
                 className={`home_app-slide${slideIdx === 0 ? " home_app-slide--active" : ""}`}
               >
@@ -683,7 +640,6 @@ export default function Home() {
                 <div className="home_slide-action">Tailor My Resume →</div>
               </div>
 
-              {/* Slide 1: Profile Builder */}
               <div
                 className={`home_app-slide${slideIdx === 1 ? " home_app-slide--active" : ""}`}
               >
@@ -722,7 +678,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Slide 2: Applications Tracker */}
               <div
                 className={`home_app-slide${slideIdx === 2 ? " home_app-slide--active" : ""}`}
               >
@@ -748,7 +703,6 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Slide 3: Interview Prep */}
               <div
                 className={`home_app-slide${slideIdx === 3 ? " home_app-slide--active" : ""}`}
               >
@@ -773,7 +727,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Progress segments */}
             <div className="home_app-progress">
               {APP_SLIDES.map((slide, i) => (
                 <button
@@ -798,7 +751,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Stats ────────────────────────────────────────── */}
       <section className="home_stats">
         <div className="home_stats-container">
           {stats.map((stat) => (
@@ -810,7 +762,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────── */}
       <section className="home_features" id="features">
         <div className="home_features-container">
           <div className="home_section-header">
@@ -831,14 +782,12 @@ export default function Home() {
                 onMouseMove={handleSpotlight}
               >
                 <div className="home_feature-spotlight" aria-hidden="true" />
-                {/* Colored accent banner */}
                 <div
                   className={`home_feature-banner home_feature-banner-${f.accent}`}
                 >
                   <span className="home_feature-banner-label">{f.banner}</span>
                   <span className="home_feature-banner-stat">{f.stat}</span>
                 </div>
-                {/* Card body */}
                 <div className="home_feature-body">
                   <div className="home_feature-card-icon-wrap">{f.icon}</div>
                   <div className="home_feature-title-row">
@@ -857,7 +806,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────── */}
       <section className="home_testimonials">
         <div className="home_testimonials-container">
           <div className="home_section-header">
@@ -871,7 +819,6 @@ export default function Home() {
           <div className="home_testimonials-grid">
             {testimonials.map((t) => (
               <div key={t.name} className="home_testimonial-card">
-                {/* Person header — name, role, badge */}
                 <div className="home_testimonial-header">
                   <div className="home_testimonial-avatar">{t.initials}</div>
                   <div className="home_testimonial-author-info">
@@ -884,7 +831,6 @@ export default function Home() {
                     {t.badge}
                   </span>
                 </div>
-                {/* Stars */}
                 <div className="home_testimonial-stars" aria-label="5 stars">
                   {[...Array(5)].map((_, i) => (
                     <svg
@@ -906,7 +852,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── How It Works ─────────────────────────────────── */}
       <section className="home_steps" id="how-it-works">
         <div className="home_steps-container">
           <div className="home_section-header">
@@ -933,7 +878,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Final CTA ────────────────────────────────────── */}
       <section className="home_final-cta">
         <div className="home_final-cta-container">
           <div className="home_final-cta-orb" />

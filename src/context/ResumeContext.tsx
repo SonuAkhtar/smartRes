@@ -7,7 +7,6 @@ import type {
   JobApplication,
 } from "../types";
 
-// Bump this version when the persisted shape changes to force a clean slate
 const STORAGE_KEY = "resume_ctx_v3";
 
 interface PersistedState {
@@ -50,7 +49,6 @@ interface ResumeContextType {
   tailoredResume: TailoredResume | null;
   jobHistory: JobEntry[];
   applications: JobApplication[];
-  /** Base64 data URL - kept in memory only (not persisted, can be large) */
   originalResumeDataUrl: string | null;
   originalResumeFileName: string | null;
   setProfile: (p: UserProfile | null) => void;
@@ -108,7 +106,6 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     } catch {
-      // localStorage full or unavailable - silently skip
     }
   }, [
     profile,
@@ -168,7 +165,6 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
-      /* ignore */
     }
   };
 

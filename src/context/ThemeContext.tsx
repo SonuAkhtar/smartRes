@@ -6,9 +6,9 @@ type Theme = 'light' | 'dark'
 
 interface ThemeContextType {
   theme: Theme                // actual applied theme (for CSS data-theme)
-  themePreference: ThemePreference  // user's saved preference
+  themePreference: ThemePreference
   setThemePreference: (t: ThemePreference) => void
-  toggleTheme: () => void     // kept for backwards compat (toggles light↔dark)
+  toggleTheme: () => void
 }
 
 function getSystemTheme(): Theme {
@@ -29,7 +29,6 @@ const ThemeContext = createContext<ThemeContextType>({
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [pref, setPref] = useState<ThemePreference>(() => {
     const stored = localStorage.getItem('theme_pref') as ThemePreference | null
-    // Legacy migration: old key was 'theme' with values 'light'|'dark'
     if (stored && ['light', 'dark', 'system'].includes(stored)) return stored
     const legacy = localStorage.getItem('theme') as Theme | null
     if (legacy === 'light' || legacy === 'dark') return legacy
@@ -53,7 +52,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme_pref', pref)
-    // keep legacy key in sync for any code that reads it directly
     localStorage.setItem('theme', theme)
   }, [theme, pref])
 

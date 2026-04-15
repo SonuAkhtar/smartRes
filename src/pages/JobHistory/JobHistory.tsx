@@ -9,7 +9,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useResume } from '../../context/ResumeContext'
 import { useToast } from '../../context/ToastContext'
 import { removeJobEntry, saveApplication } from '../../lib/db'
-import { EASE_SPRING, DURATION } from '../../lib/motion'
+import { EASE_SPRING } from '../../lib/motion'
 import type { JobEntry, TailoredResume, UserProfile, JobApplication } from '../../types'
 import './JobHistory.css'
 

@@ -95,7 +95,7 @@ function ToastIcon({ variant }: { variant: ToastVariant }) {
 function SingleToast({
   item,
   onDismiss,
-  onUndo,
+  onUndo: _onUndo,
 }: {
   item: ToastItem;
   onDismiss: () => void;
@@ -212,7 +212,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={{ toast, success, error, info }}>
       {children}
 
-      {/* Portal - renders above all other content */}
       <ul className="toast-list" aria-label="Notifications" aria-live="polite">
         <AnimatePresence mode="popLayout" initial={false}>
           {toasts.map((item) => (

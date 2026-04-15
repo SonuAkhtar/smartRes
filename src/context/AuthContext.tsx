@@ -30,13 +30,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Restore session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ? mapUser(session.user) : null)
       setLoading(false)
     })
 
-    // Keep in sync with Supabase auth events
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ? mapUser(session.user) : null)
     })
@@ -57,7 +55,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       options: { data: { name } },
     })
     if (error) return { ok: false, error: error.message }
-    // If session is null, Supabase requires email confirmation
     if (!data.session) return { ok: true, confirmEmail: true }
     return { ok: true }
   }

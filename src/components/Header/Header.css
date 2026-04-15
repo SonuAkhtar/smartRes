@@ -8,7 +8,6 @@
   transition: background var(--transition), box-shadow var(--transition);
 }
 
-/*----- Scroll progress bar -----*/
 .header_progress-track {
   position: absolute;
   bottom: 0;
@@ -29,7 +28,6 @@
   will-change: width;
 }
 
-/*----- Light mode: transparent (home page) -----*/
 .header-transparent {
   background: rgba(240, 234, 255, 0.82);
   backdrop-filter: blur(16px) saturate(1.4);
@@ -45,13 +43,11 @@
   background: rgba(26, 34, 69, 0.07);
 }
 
-/*----- Light mode: scrolled transparent -----*/
 .header-scrolled.header-transparent {
   background: rgba(240, 234, 255, 0.96);
   box-shadow: 0 1px 0 var(--color-border), 0 4px 20px rgba(90, 60, 160, 0.08);
 }
 
-/*----- Light mode: solid (other pages) -----*/
 .header-solid {
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -67,7 +63,6 @@
   background: var(--color-surface-alt);
 }
 
-/*----- Dark mode: transparent (home page) -----*/
 [data-theme="dark"] .header-transparent {
   background: transparent;
   backdrop-filter: none;
@@ -83,7 +78,6 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/*----- Dark mode: scrolled transparent -----*/
 [data-theme="dark"] .header-scrolled.header-transparent {
   background: rgba(18, 38, 40, 0.94);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -94,7 +88,6 @@
 [data-theme="dark"] .header-scrolled.header-transparent .header_nav-link { color: rgba(255, 255, 255, 0.7); }
 [data-theme="dark"] .header-scrolled.header-transparent .header_logo     { color: #ffffff; }
 
-/*----- Dark mode: solid (other pages) -----*/
 [data-theme="dark"] .header-solid {
   background: rgba(15, 29, 32, 0.92);
   box-shadow: 0 1px 0 var(--color-border), 0 4px 20px rgba(0, 0, 0, 0.25);
@@ -119,7 +112,6 @@
   gap: 24px;
 }
 
-/*----- Logo -----*/
 .header_logo {
   position: relative;
   display: flex;
@@ -131,7 +123,7 @@
   color: inherit;
   flex-shrink: 0;
   transition: opacity var(--transition);
-  min-width: 4.5rem; /* prevent layout shift during crossfade */
+  min-width: 4.5rem;
 }
 
 .header_logo:hover { opacity: 0.85; }
@@ -149,7 +141,6 @@
     letter-spacing 0.42s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* ── Default state (scrolled / solid pages): show monogram, hide wordmark ── */
 .header_logo-wordmark {
   font-size: 1.22rem;
   opacity: 0;
@@ -162,7 +153,6 @@
   font-size: 1.22rem;
   opacity: 1;
   transform: scale(1);
-  /* Overlay exactly on top of the wordmark space */
   position: absolute;
   top: 50%;
   left: 0;
@@ -172,7 +162,6 @@
     transform 0.38s cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 
-/* ── Home page, not yet scrolled: show wordmark, hide monogram ── */
 .header-transparent:not(.header-scrolled) .header_logo-wordmark {
   opacity: 1;
   transform: translateX(0) scale(1);
@@ -198,7 +187,6 @@
   background-clip: text;
 }
 
-/* ── Monogram gradient (visible on scroll / other pages) ── */
 .header_logo-monogram {
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -214,7 +202,6 @@
   background-clip: text;
 }
 
-/*----- Navigation -----*/
 .header_nav {
   display: flex;
   align-items: center;
@@ -242,25 +229,20 @@
   background: rgba(101, 204, 184, 0.15) !important;
 }
 
-/*----- Sub-nav group (desktop hover flyout) -----*/
 .header_subnav-group {
   position: relative;
 }
 
-/* Transparent bridge that fills the gap between trigger and panel.
-   While the mouse is over this pseudo-element it is still a descendant
-   of .header_subnav-group, so onMouseLeave never fires. */
 .header_subnav-group::after {
   content: '';
   position: absolute;
   top: 100%;
   left: -16px;
   right: -16px;
-  height: 14px; /* must be >= gap (10px) with a little margin */
+  height: 14px;
   z-index: 199;
 }
 
-/* Trigger button inherits header_nav-link styles */
 .header_subnav-trigger {
   display: inline-flex;
   align-items: center;
@@ -282,7 +264,6 @@
   transform: rotate(180deg);
 }
 
-/* Desktop flyout panel */
 .header_subnav-panel {
   position: absolute;
   top: calc(100% + 10px);
@@ -307,7 +288,6 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Small arrow notch pointing up */
 .header_subnav-panel::before {
   content: '';
   position: absolute;
@@ -328,7 +308,6 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* Sub-nav item */
 .header_subnav-item {
   display: flex;
   align-items: center;
@@ -394,12 +373,10 @@
   line-height: 1.4;
 }
 
-/* Mobile accordion sub-nav */
 .header_subnav-mobile {
-  display: none; /* shown only inside @media */
+  display: none;
 }
 
-/*----- CTA button -----*/
 .header_cta-btn {
   padding: 9px 20px;
   background: var(--gradient-primary);
@@ -412,7 +389,6 @@
   margin-left: 6px;
 }
 
-/*----- Override nav-link hover interference on CTA button -----*/
 .header_cta-btn:hover,
 .header-transparent .header_cta-btn:hover,
 .header-solid .header_cta-btn:hover,
@@ -424,7 +400,6 @@
 }
 
 
-/*----- Avatar + dropdown wrapper -----*/
 .header_avatar-wrapper {
   position: relative;
   margin-left: 8px;
@@ -458,7 +433,6 @@
   box-shadow: 0 0 0 4px rgba(48, 60, 108, 0.14), 0 4px 12px rgba(48, 60, 108, 0.3);
 }
 
-/*----- Dropdown -----*/
 .header_dropdown {
   position: absolute;
   top: calc(100% + 10px);
@@ -556,7 +530,6 @@
 .header_dropdown-item-upgrade svg { color: var(--color-primary); opacity: 0.8; }
 .header_dropdown-item-upgrade:hover { background: rgba(48, 60, 108, 0.08); color: var(--color-primary); }
 
-/*----- Hamburger -----*/
 .header_hamburger {
   display: none;
   flex-direction: column;
@@ -582,7 +555,6 @@
 .header_hamburger-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .header_hamburger-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/*----- Mobile user section -----*/
 .header_user-mobile {
   display: none;
   flex-direction: column;
@@ -617,12 +589,10 @@
 
 .header_logout-btn-mobile:hover { background: var(--color-error-glow); }
 
-/*----- Responsive -----*/
 @media (max-width: 768px) {
   .header_hamburger { display: flex; }
   .header_avatar-wrapper { display: none; }
 
-  /* Full-screen nav panel */
   .header_nav {
     position: fixed;
     top: var(--header-height);
@@ -696,7 +666,6 @@
     font-size: var(--text-base);
   }
 
-  /* Sub-nav: hide desktop panel, show mobile accordion */
   .header_subnav-group { width: 100%; }
 
   .header_subnav-trigger {
@@ -750,7 +719,6 @@
   .header_subnav-mobile-icon svg { width: 16px; height: 16px; }
 }
 
-/*----- Mobile backdrop -----*/
 .header_backdrop {
   display: none;
 }
