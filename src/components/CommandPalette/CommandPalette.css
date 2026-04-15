@@ -1,0 +1,208 @@
+.cp_overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.cp_panel {
+  position: fixed;
+  top: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 901;
+  width: min(560px, calc(100vw - 32px));
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.22),
+    0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .cp_panel {
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* ----- Search row ----- */
+.cp_search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cp_search-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.cp_search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  caret-color: var(--color-primary);
+}
+
+.cp_search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.cp_esc-hint {
+  font-size: 0.65rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  padding: 2px 6px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ----- Command list ----- */
+.cp_list {
+  overflow-y: auto;
+  max-height: 360px;
+  padding: 6px;
+}
+
+.cp_empty {
+  text-align: center;
+  padding: 28px 16px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.cp_cmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.cp_cmd-active {
+  background: rgba(48, 60, 108, 0.08);
+}
+
+[data-theme="dark"] .cp_cmd-active {
+  background: rgba(101, 204, 184, 0.12);
+}
+
+.cp_cmd-icon-wrap {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+
+.cp_cmd-active .cp_cmd-icon-wrap {
+  background: rgba(48, 60, 108, 0.1);
+  border-color: rgba(48, 60, 108, 0.25);
+}
+
+.cp_cmd-icon {
+  width: 15px;
+  height: 15px;
+  color: var(--color-text-muted);
+}
+
+.cp_cmd-active .cp_cmd-icon {
+  color: var(--color-primary);
+}
+
+.cp_cmd-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.cp_cmd-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp_cmd-active .cp_cmd-label {
+  color: var(--color-primary);
+}
+
+.cp_cmd-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp_cmd-enter {
+  font-size: 0.65rem;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  padding: 2px 5px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transition: opacity 0.12s;
+  flex-shrink: 0;
+}
+
+.cp_cmd-active .cp_cmd-enter {
+  opacity: 1;
+}
+
+/* ----- Footer ----- */
+.cp_footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.cp_footer kbd {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  padding: 1px 5px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  font-size: 0.65rem;
+  margin-right: 3px;
+}

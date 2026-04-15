@@ -1,0 +1,234 @@
+.resume-document {
+  background: #ffffff;
+  color: #1a2245;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  padding: 48px 52px;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  line-height: 1.5;
+  box-shadow: var(--shadow-xl);
+  border-radius: var(--radius-lg);
+  min-height: 900px;
+}
+
+/*----- Header -----*/
+.resume-document_header {
+  text-align: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #1a2245;
+}
+
+.resume-document_name {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a2245;
+  letter-spacing: 0.005em;
+  margin-bottom: 4px;
+}
+
+.resume-document_job-headline {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #303c6c;
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+
+.resume-document_contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 18px;
+}
+
+.resume-document_contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #4a5580;
+}
+
+.resume-document_contact-icon { font-size: 0.7rem; }
+
+/*----- Sections -----*/
+.resume-document_section { margin-bottom: 24px; }
+
+.resume-document_section-title {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #303c6c;
+  margin-bottom: 6px;
+}
+
+.resume-document_divider {
+  height: 1.5px;
+  background: linear-gradient(90deg, #1a2245 0%, #adbbda 100%);
+  margin-bottom: 14px;
+}
+
+/*----- Summary -----*/
+.resume-document_summary {
+  font-size: 0.88rem;
+  color: #333a4d;
+  line-height: 1.75;
+}
+
+/*----- Skills -----*/
+.resume-document_skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0;
+  row-gap: 4px;
+}
+
+.resume-document_skill-tag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #333a4d;
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Bullet separator between skills */
+.resume-document_skill-tag::after {
+  content: ' • ';
+  color: #adbbda;
+  font-weight: 400;
+}
+
+.resume-document_skill-tag:last-child::after {
+  content: '';
+}
+
+.resume-document_skill-tag-highlighted {
+  color: #333a4d;
+  font-weight: 400;
+}
+
+.resume-document_skill-tag-suggested {
+  color: #333a4d;
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+/*----- Experience -----*/
+.resume-document_experience { margin-bottom: 14px; }
+
+.resume-document_experience-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.resume-document_position {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1a2245;
+}
+
+.resume-document_company {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4a5580;
+}
+
+.resume-document_duration {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #7a8ab8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resume-document_job-description {
+  font-size: 0.875rem;
+  color: #4a5580;
+  line-height: 1.7;
+}
+
+/*----- Education -----*/
+.resume-document_education-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.resume-document_degree {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a2245;
+}
+
+.resume-document_school {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: #4a5580;
+  margin-top: 2px;
+}
+
+.resume-document_year {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #7a8ab8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/*----- Match badge -----*/
+.resume-document_match-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 5px 12px;
+  background: var(--gradient-primary);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(48, 60, 108, 0.3);
+}
+
+/*----- Print -----*/
+@media print {
+  .resume-document {
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 32px 40px;
+    max-width: 100%;
+    min-height: unset;
+  }
+
+  .resume-document_header { break-after: avoid; }
+
+  .resume-document_section { break-inside: avoid; }
+
+  .resume-document_match-badge,
+  .resume-document_footer { display: none; }
+
+  .resume-document_skills-list {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

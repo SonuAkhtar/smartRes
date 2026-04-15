@@ -1,0 +1,119 @@
+.auth-confirm {
+  min-height: var(--page-min-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: var(--color-bg);
+}
+
+.auth-confirm__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 48px 40px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+.auth-confirm__icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(48, 60, 108, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.75rem;
+}
+
+.auth-confirm__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.auth-confirm__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0 0 8px;
+}
+
+.auth-confirm__email {
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.auth-confirm__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 24px 0;
+}
+
+.auth-confirm__hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.auth-confirm__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-confirm__btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #303c6c;
+  color: #fff;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  transition: opacity var(--transition-base);
+}
+
+.auth-confirm__btn-primary:hover { opacity: 0.85; }
+
+.auth-confirm__btn-ghost {
+  width: 100%;
+  padding: 12px;
+  background: none;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  transition: color var(--transition-base);
+}
+
+.auth-confirm__btn-ghost:hover { color: var(--color-text); }
+
+.auth-confirm__resend {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.auth-confirm__resend button {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  font-size: inherit;
+}
+
+[data-theme="dark"] .auth-confirm__card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
