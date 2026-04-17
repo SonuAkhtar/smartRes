@@ -76,19 +76,15 @@ export default function ProfileBuilder() {
     () => !hasExisting && !localStorage.getItem("onboarding_seen"),
   );
 
-  // Upload phase shown only for new users
   const [showUpload, setShowUpload] = useState(!hasExisting);
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [parsedFields, setParsedFields] = useState<ParsedFields | null>(null);
   const [parseError, setParseError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
-  // Form state initialised from existing profile (if editing)
   const [form, setForm] = useState<FormData>(() => initForm(profile, user));
   const [prefilled, setPrefilled] = useState<Set<string>>(new Set());
 
-  // Additional parsed experiences (entries 2–5) stored separately; entry 0
-  // is editable in the wizard form, the rest are shown as pre-filled cards.
   const [extraExperiences, setExtraExperiences] = useState<Experience[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -98,16 +94,12 @@ export default function ProfileBuilder() {
   const [skillInput, setSkillInput] = useState("");
   const [triedProceed, setTriedProceed] = useState(false);
 
-  // Focus input when step changes
   useEffect(() => {
     if (!showUpload) setTimeout(() => inputRef.current?.focus(), 60);
   }, [step, showUpload]);
 
-  // ----- Field helpers ──────────────────────────────────────
-
   const setField = (key: keyof FormData, value: string | string[]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
-    // User has manually edited this field - remove prefill badge
     setPrefilled((prev) => {
       const n = new Set(prev);
       n.delete(key as string);
@@ -126,7 +118,6 @@ export default function ProfileBuilder() {
     setSkillInput("");
   };
 
-  // Skill suggestions based on job title
   const getSkillSuggestions = (): string[] => {
     const title = form.title.toLowerCase();
     const map: Record<string, string[]> = {
@@ -294,7 +285,6 @@ export default function ProfileBuilder() {
     const keys = Object.keys(map);
     const match = keys.find((k) => title.includes(k));
     if (match) return map[match];
-    // Generic fallback
     return [
       "Communication",
       "Problem Solving",
@@ -321,8 +311,6 @@ export default function ProfileBuilder() {
       setField("skills", form.skills.slice(0, -1));
   };
 
-  // ----- File processing ────────────────────────────────────
-
   const processFile = async (file: File) => {
     setParseError("");
     setUploadState("parsing");
@@ -331,7 +319,6 @@ export default function ProfileBuilder() {
       const text = await extractTextFromFile(file);
       setResumeText(text);
 
-      // Store original file as data URL for Dashboard preview
       const isPdf = file.name.toLowerCase().endsWith(".pdf");
       if (isPdf) {
         const reader = new FileReader();
@@ -349,8 +336,6 @@ export default function ProfileBuilder() {
       const parsed = parseResumeText(text);
       setParsedFields(parsed);
 
-      // Build the patch and prefilled set synchronously BEFORE touching React state,
-      // avoiding any risk of the functional updater running at an unexpected time.
       const newPrefilled = new Set<string>();
       const patch: Partial<FormData> = { resumeFileName: file.name };
 
@@ -385,13 +370,11 @@ export default function ProfileBuilder() {
       tryMerge("jobDesc", parsed.jobDesc);
       tryMerge("summary", parsed.summary);
       tryMerge("linkedIn", parsed.linkedIn);
-      // Use explicit portfolio first, else fall back to GitHub URL
       tryMerge("portfolio", parsed.portfolio ?? parsed.github);
 
       setForm((prev) => ({ ...prev, ...patch }));
       setPrefilled(newPrefilled);
 
-      // Store all experiences beyond the first (entry 0 goes into form fields)
       if (parsed.experiences && parsed.experiences.length > 1) {
         setExtraExperiences(
           parsed.experiences.slice(1).map((e, i) => ({
@@ -416,8 +399,6 @@ export default function ProfileBuilder() {
     processFile(file);
   };
 
-  // ----- Drag and drop ──────────────────────────────────────
-
   const onDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -429,8 +410,6 @@ export default function ProfileBuilder() {
     const file = e.dataTransfer.files[0];
     if (file) processFile(file);
   };
-
-  // ----- Navigation ─────────────────────────────────────────
 
   const go = (delta: 1 | -1) => {
     if (animating) return;
@@ -536,7 +515,6 @@ export default function ProfileBuilder() {
   const submitProfile = async () => {
     setSaving(true);
 
-    // Primary experience from the form (user-editable)
     const primaryExp: Experience[] = form.company
       ? [
           {
@@ -549,7 +527,6 @@ export default function ProfileBuilder() {
         ]
       : [];
 
-    // Merge: primary from form + extras parsed from resume (up to 5 total)
     const experiences: Experience[] = [
       ...primaryExp,
       ...extraExperiences,
@@ -591,7 +568,6 @@ export default function ProfileBuilder() {
     }
 
     setSaving(false);
-    // Navigate to profile when editing, job-matcher for new users
     navigate(hasExisting ? "/profile" : "/job-matcher");
   };
 
@@ -601,8 +577,6 @@ export default function ProfileBuilder() {
     ) : null;
 
   const progress = (step / TOTAL_STEPS) * 100;
-
-  // ----- Steps definition ───────────────────────────────────
 
   const steps = [
     {
@@ -782,7 +756,6 @@ export default function ProfileBuilder() {
                 ))}
               </div>
             )}
-            {/* Skills from resume - shown whenever parsedFields has skills */}
             {parsedFields?.skills && parsedFields.skills.length > 0 && (
               <div className="profile-builder_suggestions profile-builder_resume-skills">
                 <span className="profile-builder_suggestions-label profile-builder_resume-skills-label">
@@ -809,7 +782,6 @@ export default function ProfileBuilder() {
                 </div>
               </div>
             )}
-            {/* Skill suggestions based on job title */}
             {(() => {
               const suggestions = getSkillSuggestions().filter(
                 (s) =>
@@ -941,7 +913,6 @@ export default function ProfileBuilder() {
               rows={3}
             />
           </div>
-          {/* Additional experiences detected from resume */}
           {extraExperiences.length > 0 && (
             <div className="profile-builder_extra-experiences">
               <span className="profile-builder_extra-exp-label">
@@ -1029,10 +1000,6 @@ export default function ProfileBuilder() {
       ),
     },
   ];
-
-  // ----------─
-  // UPLOAD PHASE
-  // ----------─
 
   if (showUpload) {
     const foundCount = parsedFields
@@ -1191,10 +1158,6 @@ export default function ProfileBuilder() {
     );
   }
 
-  // ----------─
-  // STEPS PHASE
-  // ----------─
-
   const currentStep = steps[step];
 
   return (
@@ -1235,7 +1198,6 @@ export default function ProfileBuilder() {
 
           <div className="profile-builder_field">{currentStep.content}</div>
 
-          {/* Inline validation error */}
           {triedProceed && getStepError() && (
             <div className="profile-builder_field-error" role="alert">
               <svg

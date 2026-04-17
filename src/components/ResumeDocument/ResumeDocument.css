@@ -12,7 +12,6 @@
   min-height: 900px;
 }
 
-/*----- Header -----*/
 .resume-document_header {
   text-align: center;
   margin-bottom: 28px;
@@ -56,7 +55,6 @@
 
 .resume-document_contact-icon { font-size: 0.7rem; }
 
-/*----- Sections -----*/
 .resume-document_section { margin-bottom: 24px; }
 
 .resume-document_section-title {
@@ -75,14 +73,12 @@
   margin-bottom: 14px;
 }
 
-/*----- Summary -----*/
 .resume-document_summary {
   font-size: 0.88rem;
   color: #333a4d;
   line-height: 1.75;
 }
 
-/*----- Skills -----*/
 .resume-document_skills-list {
   display: flex;
   flex-wrap: wrap;
@@ -102,7 +98,6 @@
   border-radius: 0;
 }
 
-/* Bullet separator between skills */
 .resume-document_skill-tag::after {
   content: ' • ';
   color: #adbbda;
@@ -124,7 +119,6 @@
   font-size: 0.85rem;
 }
 
-/*----- Experience -----*/
 .resume-document_experience { margin-bottom: 14px; }
 
 .resume-document_experience-header {
@@ -163,7 +157,6 @@
   line-height: 1.7;
 }
 
-/*----- Education -----*/
 .resume-document_education-item {
   display: flex;
   align-items: flex-start;
@@ -194,7 +187,6 @@
   flex-shrink: 0;
 }
 
-/*----- Match badge -----*/
 .resume-document_match-badge {
   position: absolute;
   top: 16px;
@@ -209,7 +201,6 @@
   box-shadow: 0 4px 12px rgba(48, 60, 108, 0.3);
 }
 
-/*----- Print -----*/
 @media print {
   .resume-document {
     box-shadow: none;

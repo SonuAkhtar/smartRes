@@ -8,7 +8,7 @@
   overflow: hidden;
 }
 
-/*----- Background -----*/
+
 .auth_bg {
   position: fixed;
   inset: 0;
@@ -29,7 +29,7 @@
   gap: 32px;
 }
 
-/*----- Logo -----*/
+
 .auth_logo {
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
 
 .auth_logo-text { color: #ffffff; }
 
-/*----- Card -----*/
+
 .auth_card {
   width: 100%;
   background: rgba(26, 34, 69, 0.45);
@@ -121,7 +121,7 @@
   line-height: 1.6;
 }
 
-/*----- Form -----*/
+
 .auth_form {
   display: flex;
   flex-direction: column;
@@ -179,7 +179,7 @@
   box-shadow: 0 0 0 3px rgba(48, 60, 108, 0.18);
 }
 
-/*----- Password strength -----*/
+
 .auth_strength {
   display: flex;
   align-items: center;
@@ -208,7 +208,7 @@
   transition: color var(--transition);
 }
 
-/*----- Feedback -----*/
+
 .auth_error {
   display: flex;
   align-items: center;
@@ -233,7 +233,7 @@
   color: #adbbda;
 }
 
-/*----- Submit button -----*/
+
 .auth_submit-btn {
   width: 100%;
   padding: 13px;
@@ -308,3 +308,203 @@
   color: var(--c-coral);
   border-color: var(--c-coral);
 }
+
+
+/* ── Social / alternative login ── */
+
+.auth_divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+}
+
+.auth_divider::before,
+.auth_divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(228, 233, 247, 0.1);
+}
+
+.auth_divider span {
+  font-size: 0.73rem;
+  color: rgba(228, 233, 247, 0.35);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.auth_social {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.auth_social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: rgba(228, 233, 247, 0.06);
+  border: 1px solid rgba(228, 233, 247, 0.13);
+  border-radius: var(--radius-md);
+  color: rgba(228, 233, 247, 0.75);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.auth_social-btn:hover:not(:disabled) {
+  background: rgba(228, 233, 247, 0.11);
+  border-color: rgba(228, 233, 247, 0.22);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.auth_social-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth_social-btn svg { flex-shrink: 0; }
+
+
+/* ── Phone OTP flow ── */
+
+.auth_phone-back {
+  background: none;
+  color: rgba(228, 233, 247, 0.4);
+  font-size: 0.82rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  margin-bottom: 22px;
+  transition: color var(--transition);
+}
+
+.auth_phone-back:hover { color: rgba(228, 233, 247, 0.8); }
+
+.auth_phone-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth_phone-subtitle {
+  font-size: 0.88rem;
+  color: rgba(228, 233, 247, 0.5);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.auth_phone-highlight {
+  color: rgba(228, 233, 247, 0.85);
+  font-weight: 600;
+}
+
+/* Country code + number grouped input */
+.auth_phone-group {
+  display: flex;
+  border: 1px solid rgba(228, 233, 247, 0.14);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(228, 233, 247, 0.06);
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+.auth_phone-group:focus-within {
+  border-color: rgba(48, 60, 108, 0.7);
+  background: rgba(48, 60, 108, 0.1);
+  box-shadow: 0 0 0 3px rgba(48, 60, 108, 0.18);
+}
+
+.auth_phone-select {
+  flex-shrink: 0;
+  padding: 12px 24px 12px 12px;
+  background: rgba(228, 233, 247, 0.04);
+  border: none;
+  border-right: 1px solid rgba(228, 233, 247, 0.1);
+  color: rgba(228, 233, 247, 0.85);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  /* chevron arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba%28228%2C233%2C247%2C0.4%29' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  max-width: 170px;
+  min-width: 100px;
+}
+
+.auth_phone-select option {
+  background: #1a2245;
+  color: rgba(228, 233, 247, 0.85);
+}
+
+.auth_phone-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  outline: none;
+  min-width: 0;
+}
+
+.auth_phone-input::placeholder { color: rgba(228, 233, 247, 0.25); }
+
+/* Live digit counter */
+.auth_phone-meta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.auth_phone-count {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color var(--transition);
+}
+
+/* OTP input */
+.auth_otp-input {
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.4em;
+  font-weight: 700;
+}
+
+.auth_otp-hint {
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(228, 233, 247, 0.4);
+  margin-top: -4px;
+}
+
+.auth_otp-resend {
+  background: none;
+  color: var(--c-coral);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0;
+  transition: color var(--transition);
+}
+
+.auth_otp-resend:hover:not(:disabled) { color: #ffffff; }
+.auth_otp-resend:disabled { opacity: 0.5; cursor: not-allowed; }

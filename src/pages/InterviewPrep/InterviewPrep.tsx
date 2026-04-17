@@ -135,7 +135,6 @@ export default function InterviewPrep() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Support pre-filling from JobHistory: ?entryId=xxx
   const params = new URLSearchParams(location.search);
   const prefillEntryId = params.get("entryId");
   const prefillEntry = prefillEntryId
@@ -228,7 +227,6 @@ export default function InterviewPrep() {
               ease: EASE_SPRING,
             }}
           >
-            {/* Source toggle */}
             {jobHistory.length > 0 && (
               <div
                 className="ip_source-toggle"
@@ -360,7 +358,6 @@ export default function InterviewPrep() {
           </motion.div>
         ) : (
           <div className="ip_results">
-            {/* Results header */}
             <motion.div
               className="ip_results-header"
               initial={{ opacity: 0, y: -12 }}
@@ -458,9 +455,7 @@ export default function InterviewPrep() {
             </motion.div>
 
             {practiceMode ? (
-              /* ----- Practice Mode ----- */
               <div className="ip_practice-mode">
-                {/* Progress bar */}
                 <div
                   className="ip_practice-progress"
                   aria-label={`Question ${practiceIndex + 1} of ${filtered?.length ?? 0}`}
@@ -476,7 +471,6 @@ export default function InterviewPrep() {
                   {practiceIndex + 1} <span>of {filtered?.length ?? 0}</span>
                 </div>
 
-                {/* Single question */}
                 <AnimatePresence mode="wait">
                   {filtered && filtered[practiceIndex] && (
                     <motion.div
@@ -495,7 +489,6 @@ export default function InterviewPrep() {
                   )}
                 </AnimatePresence>
 
-                {/* Navigation */}
                 <div className="ip_practice-nav">
                   <button
                     className="ip_practice-nav-btn"
@@ -527,7 +520,6 @@ export default function InterviewPrep() {
                   )}
                 </div>
 
-                {/* Category filter (available in practice mode too) */}
                 <div className="ip_practice-category-row">
                   <span className="ip_practice-category-label">Category:</span>
                   <div className="ip_category-tabs">
@@ -561,9 +553,7 @@ export default function InterviewPrep() {
                 </div>
               </div>
             ) : (
-              /* ----- Normal browse mode ----- */
               <>
-                {/* Category tabs */}
                 <motion.div
                   className="ip_category-tabs"
                   initial={{ opacity: 0 }}
@@ -591,7 +581,6 @@ export default function InterviewPrep() {
                   )}
                 </motion.div>
 
-                {/* Category description */}
                 {activeCategory !== "all" && (
                   <motion.p
                     className="ip_category-desc"
@@ -604,7 +593,6 @@ export default function InterviewPrep() {
                   </motion.p>
                 )}
 
-                {/* Questions list */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeCategory}

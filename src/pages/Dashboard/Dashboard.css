@@ -19,7 +19,6 @@
   gap: 24px;
 }
 
-/*----- Empty state -----*/
 .dashboard_empty {
   display: flex;
   flex-direction: column;
@@ -66,7 +65,6 @@
 
 .dashboard_empty-actions { margin-top: 8px; }
 
-/*----- Top bar -----*/
 .dashboard_topbar {
   display: flex;
   align-items: flex-start;
@@ -98,7 +96,6 @@
 
 .dashboard_download-group { display: flex; gap: 8px; }
 
-/*----- Buttons -----*/
 .dashboard_action-btn {
   display: inline-flex;
   align-items: center;
@@ -180,7 +177,6 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/*----- Match bar -----*/
 .dashboard_match-bar {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -263,7 +259,6 @@
   border-color: rgba(48, 60, 108, 0.45);
 }
 
-/*----- Score breakdown -----*/
 .dashboard_score-breakdown {
   display: flex;
   flex-direction: column;
@@ -315,7 +310,6 @@
   color: var(--color-primary);
 }
 
-/*----- Tab switcher -----*/
 .dashboard_tabs {
   display: flex;
   gap: 4px;
@@ -408,7 +402,6 @@
   white-space: nowrap;
 }
 
-/*----- Preview toolbar -----*/
 .dashboard_preview-toolbar {
   display: flex;
   align-items: center;
@@ -529,7 +522,6 @@
   }
 }
 
-/*----- Preview frame -----*/
 .dashboard_preview {
   overflow: hidden;
   border-radius: var(--radius-xl);
@@ -537,7 +529,6 @@
   background: var(--color-surface);
 }
 
-/*----- Original resume panel -----*/
 .dashboard_original-resume {
   display: flex;
   flex-direction: column;
@@ -623,7 +614,6 @@
   line-height: 1.65;
 }
 
-/*----- Footer actions -----*/
 .dashboard_footer-actions {
   display: flex;
   gap: 12px;
@@ -632,7 +622,6 @@
   padding-top: 8px;
 }
 
-/*----- Original resume toolbar actions -----*/
 .dashboard_original-toolbar-actions {
   display: flex;
   align-items: center;
@@ -661,7 +650,7 @@
 }
 
 .dashboard_original-empty-icon {
-  font-size: 0; /* override the emoji style */
+  font-size: 0;
   width: 88px;
   height: 88px;
   border-radius: var(--radius-2xl);
@@ -674,7 +663,6 @@
   margin-bottom: 8px;
 }
 
-/*----- Edit Resume Drawer -----*/
 .dashboard_drawer-backdrop {
   position: fixed;
   inset: 0;
@@ -804,7 +792,6 @@
 
 .dashboard_drawer-textarea { min-height: 100px; line-height: 1.6; }
 
-/*----- Skills in drawer -----*/
 .dashboard_drawer-skills {
   display: flex;
   flex-wrap: wrap;
@@ -878,7 +865,6 @@
 
 .dashboard_drawer-profile-link:hover { color: var(--color-text); }
 
-/*----- Responsive -----*/
 @media (max-width: 768px) {
   .dashboard_topbar { flex-direction: column; }
   .dashboard_topbar-actions { width: 100%; }

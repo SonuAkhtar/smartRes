@@ -2,13 +2,9 @@ import './Card.css'
 
 interface CardProps {
   children: React.ReactNode
-  /** Add box-shadow */
   shadow?: boolean
-  /** Lift + border-color change on hover */
   hoverable?: boolean
-  /** Stronger border */
   bordered?: boolean
-  /** Add default padding */
   padded?: boolean
   className?: string
   style?: React.CSSProperties

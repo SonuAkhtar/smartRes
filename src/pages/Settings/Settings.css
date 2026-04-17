@@ -48,7 +48,6 @@
   gap: 32px;
 }
 
-/* ----- Page header ----- */
 .settings_header {
   margin-bottom: 4px;
 }
@@ -67,7 +66,6 @@
   margin: 0;
 }
 
-/* ----- Section ----- */
 .settings_section {
   border-top: 1px solid var(--color-border);
   padding-top: 24px;
@@ -87,7 +85,6 @@
   flex-direction: column;
 }
 
-/* ----- Field ----- */
 .settings_field {
   padding: 14px 0;
 }
@@ -156,7 +153,6 @@
   margin: 0;
 }
 
-/* ----- Link button ----- */
 .settings_link-btn {
   background: none;
   border: none;
@@ -174,7 +170,6 @@
   opacity: 0.7;
 }
 
-/* ----- Toggle switch ----- */
 .settings_toggle-row {
   display: flex;
   align-items: center;
@@ -234,7 +229,6 @@
   transform: translateX(20px);
 }
 
-/* ----- Theme selector ----- */
 .settings_theme-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -302,7 +296,6 @@
   line-height: 1.3;
 }
 
-/* ----- Action rows (Data & Privacy) ----- */
 .settings_action-row {
   display: flex;
   align-items: center;
@@ -340,7 +333,6 @@
   color: var(--color-text-muted);
 }
 
-/* ----- Danger button ----- */
 .settings_danger-btn {
   padding: 9px 18px;
   background: transparent;
@@ -367,7 +359,6 @@
   cursor: not-allowed;
 }
 
-/* ----- Delete confirm ----- */
 .settings_confirm-box {
   overflow: hidden;
   margin-top: 14px;
@@ -428,7 +419,6 @@
   color: var(--color-text);
 }
 
-/* ----- Mobile ----- */
 @media (max-width: 600px) {
   .settings {
     padding: calc(var(--header-height) + 32px) 16px 64px;

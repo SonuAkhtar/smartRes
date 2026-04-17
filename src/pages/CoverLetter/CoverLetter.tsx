@@ -256,7 +256,6 @@ export default function CoverLetter() {
     <div className="cl">
       <div className="cl_bg" aria-hidden="true" />
       <div className="cl_container">
-        {/* Header */}
         <motion.div
           className="cl_header"
           variants={fadeUpVariants}
@@ -273,7 +272,6 @@ export default function CoverLetter() {
         </motion.div>
 
         <div className="cl_layout">
-          {/* ----- Left panel: inputs ----- */}
           <motion.div
             className="cl_panel cl_panel-left"
             variants={fadeUpVariants}
@@ -281,7 +279,6 @@ export default function CoverLetter() {
             animate="visible"
             custom={1}
           >
-            {/* Source toggle */}
             <div className="cl_section">
               <label className="cl_label">Job Source</label>
               <div className="cl_source-toggle" role="group">
@@ -304,7 +301,6 @@ export default function CoverLetter() {
               </div>
             </div>
 
-            {/* JD input */}
             <AnimatePresence mode="wait">
               {source === "paste" ? (
                 <motion.div
@@ -363,7 +359,6 @@ export default function CoverLetter() {
               )}
             </AnimatePresence>
 
-            {/* Company + Role */}
             <div className="cl_row">
               <div className="cl_section cl_section-half">
                 <label className="cl_label" htmlFor="cl-company">
@@ -391,7 +386,6 @@ export default function CoverLetter() {
               </div>
             </div>
 
-            {/* Tone selector */}
             <div className="cl_section">
               <label className="cl_label">Tone</label>
               <div className="cl_tone-grid">
@@ -410,7 +404,6 @@ export default function CoverLetter() {
               </div>
             </div>
 
-            {/* Generate */}
             <button
               className="cl_generate-btn"
               onClick={handleGenerate}
@@ -438,7 +431,6 @@ export default function CoverLetter() {
             )}
           </motion.div>
 
-          {/* ----- Right panel: output ----- */}
           <motion.div
             className="cl_panel cl_panel-right"
             variants={fadeUpVariants}
@@ -448,7 +440,6 @@ export default function CoverLetter() {
           >
             {letter ? (
               <>
-                {/* Metadata row */}
                 <div className="cl_output-meta">
                   <span className="cl_word-count">
                     {wc} words · ~{readMins} min read
@@ -456,7 +447,6 @@ export default function CoverLetter() {
                   {usedAI && <span className="cl_ai-badge">AI-generated</span>}
                 </div>
 
-                {/* Editable letter */}
                 <textarea
                   ref={textareaRef}
                   className="cl_output-textarea"
@@ -466,7 +456,6 @@ export default function CoverLetter() {
                   aria-label="Cover letter content"
                 />
 
-                {/* Action bar */}
                 <div className="cl_action-bar">
                   <button className="cl_action-btn" onClick={handleCopy}>
                     {copied ? (

@@ -25,7 +25,6 @@
   gap: 36px;
 }
 
-/* Header */
 .templates_header { text-align: center; }
 
 .templates_badge {
@@ -55,14 +54,12 @@
   margin: 0;
 }
 
-/* Grid */
 .templates_grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
 
-/* Card */
 .templates_card {
   background: var(--color-surface);
   border: 2px solid var(--color-border);
@@ -88,7 +85,6 @@
   box-shadow: 0 0 0 1px var(--color-primary), 0 8px 24px rgba(48, 60, 108, 0.14);
 }
 
-/* Pro / Active badges */
 .templates_pro-badge,
 .templates_active-badge {
   position: absolute;
@@ -117,7 +113,6 @@
   color: var(--color-primary);
 }
 
-/* Preview area */
 .templates_preview {
   position: relative;
   background: var(--color-surface-raised);
@@ -138,7 +133,6 @@
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
 }
 
-/* Pro lock overlay */
 .templates_lock-overlay {
   position: absolute;
   inset: 0;
@@ -183,7 +177,6 @@
 
 .templates_upgrade-btn:hover { opacity: 0.88; }
 
-/* Card body */
 .templates_card-body {
   padding: 16px;
   display: flex;
@@ -236,7 +229,6 @@
 
 .templates_use-btn:disabled { cursor: default; }
 
-/* Footer note */
 .templates_note {
   text-align: center;
   font-size: var(--text-xs);
@@ -245,7 +237,6 @@
   line-height: 1.6;
 }
 
-/* Responsive */
 @media (max-width: 860px) {
   .templates_grid { grid-template-columns: repeat(2, 1fr); }
 }

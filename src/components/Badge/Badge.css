@@ -12,7 +12,6 @@
   white-space: nowrap;
 }
 
-/* Variants */
 .badge--primary {
   background: linear-gradient(90deg, #303c6c, #f4976c);
   color: #fff;
@@ -46,7 +45,6 @@
   color: var(--color-text-muted);
 }
 
-/* Dark mode overrides */
 [data-theme="dark"] .badge--success {
   background: rgba(101, 204, 184, 0.18);
   color: #65ccb8;

@@ -12,11 +12,8 @@ export default function AuthConfirm() {
   const [resendLoading, setResendLoading] = useState(false)
   const [resendDone, setResendDone] = useState(false)
 
-  // Email passed via query string from Auth.tsx on signup: /auth/confirm?email=...
   const email = searchParams.get('email') ?? ''
 
-  // If the user is already confirmed and signed in (e.g. clicked email link and
-  // returned to the app), redirect them to dashboard
   useEffect(() => {
     if (user) navigate('/dashboard', { replace: true })
   }, [user, navigate])

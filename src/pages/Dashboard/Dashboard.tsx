@@ -47,13 +47,11 @@ export default function Dashboard() {
   const [scoreExpanded, setScoreExpanded] = useState(false);
   const [scoreCopied, setScoreCopied] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  // Local editable copy of profile for the drawer
   const [draft, setDraft] = useState<UserProfile | null>(null);
   const [skillInput, setSkillInput] = useState("");
   const previewRef = useRef<HTMLDivElement>(null);
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync draft when edit drawer opens; lock body scroll
   useEffect(() => {
     if (editOpen && profile)
       setDraft({ ...profile, skills: [...profile.skills] });
@@ -63,14 +61,12 @@ export default function Dashboard() {
     };
   }, [editOpen, profile]);
 
-  // Close drawer on Escape; zoom keyboard shortcuts on AI tab
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setEditOpen(false);
         return;
       }
-      // Zoom shortcuts - only when not typing in an input
       if (editOpen) return;
       if (
         e.target instanceof HTMLInputElement ||
@@ -107,7 +103,6 @@ export default function Dashboard() {
 
   const handleOriginalUpload = async (file: File) => {
     try {
-      // Parse text for future re-analysis
       const text = await extractTextFromFile(file);
       setResumeText(text);
 
@@ -123,7 +118,6 @@ export default function Dashboard() {
         reader.onerror = () => toastError("Failed to read PDF file.");
         reader.readAsDataURL(file);
       } else {
-        // For non-PDF, store a placeholder so the tab shows something
         setOriginalResume("non-pdf", file.name);
         toastSuccess(
           `Resume "${file.name}" uploaded. PDF format shows inline preview.`,
@@ -135,9 +129,7 @@ export default function Dashboard() {
   };
 
   const downloadPDF = async () => {
-    // Ensure the AI resume tab is visible before capturing
     if (activeTab !== "ai") setActiveTab("ai");
-    // Wait a tick for the DOM to render the resume element
     await new Promise((r) => setTimeout(r, 80));
     const el = document.getElementById("resume-preview");
     if (!el) {
@@ -430,7 +422,6 @@ export default function Dashboard() {
     <div className="dashboard">
       <div className="dashboard_bg" />
       <div className="dashboard_container">
-        {/* Top bar */}
         <div className="dashboard_topbar">
           <div className="dashboard_topbar-info">
             <h1 className="dashboard_title">Your Resume</h1>
@@ -500,7 +491,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Match Score Bar */}
         {tailoredResume && (
           <div className="dashboard_match-bar">
             <div className="dashboard_match-bar-info">
@@ -536,7 +526,6 @@ export default function Dashboard() {
               />
             </div>
 
-            {/* Expandable breakdown */}
             {scoreExpanded && (
               <div className="dashboard_score-breakdown">
                 {tailoredResume.matchedSkills.length > 0 && (
@@ -605,7 +594,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Tab switcher */}
         <div className="dashboard_tabs">
           <button
             className={`dashboard_tab ${activeTab === "ai" ? "dashboard_tab-active" : ""}`}
@@ -652,7 +640,6 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* AI Resume Preview */}
         {activeTab === "ai" && (
           <>
             <div className="dashboard_preview-toolbar">
@@ -733,10 +720,8 @@ export default function Dashboard() {
           </>
         )}
 
-        {/* Original Resume Preview */}
         {activeTab === "original" && (
           <div className="dashboard_original-resume">
-            {/* Hidden upload input */}
             <input
               ref={uploadInputRef}
               type="file"
@@ -817,7 +802,6 @@ export default function Dashboard() {
                 </object>
               </>
             ) : originalResumeDataUrl === "non-pdf" ? (
-              /* Non-PDF uploaded - show info + replace option */
               <div className="dashboard_original-empty">
                 <div className="dashboard_original-nonpdf-icon">
                   <svg
@@ -925,10 +909,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ----- Edit Resume Drawer ----- */}
         {editOpen && draft && (
           <>
-            {/* Backdrop */}
             <div
               className="dashboard_drawer-backdrop"
               onClick={() => setEditOpen(false)}
@@ -958,7 +940,6 @@ export default function Dashboard() {
                 </button>
               </div>
               <div className="dashboard_drawer-body">
-                {/* Basic Info */}
                 <div className="dashboard_drawer-section">
                   <h3 className="dashboard_drawer-section-title">Basic Info</h3>
                   <div className="dashboard_drawer-field">
@@ -1030,7 +1011,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Summary */}
                 <div className="dashboard_drawer-section">
                   <h3 className="dashboard_drawer-section-title">Summary</h3>
                   <div className="dashboard_drawer-field">
@@ -1049,7 +1029,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Skills */}
                 <div className="dashboard_drawer-section">
                   <h3 className="dashboard_drawer-section-title">Skills</h3>
                   <div className="dashboard_drawer-skills">
@@ -1129,7 +1108,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Links */}
                 <div className="dashboard_drawer-section">
                   <h3 className="dashboard_drawer-section-title">Links</h3>
                   <div className="dashboard_drawer-field">
@@ -1185,7 +1163,6 @@ export default function Dashboard() {
           </>
         )}
 
-        {/* Footer actions */}
         <div className="dashboard_footer-actions">
           <button
             className="dashboard_action-btn dashboard_action-btn-primary dashboard_action-btn-large"

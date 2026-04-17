@@ -1,4 +1,4 @@
-/* -----─ Shared Legal Page Styles ----- */
+
 
 .legal {
   min-height: var(--page-min-height);
@@ -38,7 +38,6 @@
   }
 }
 
-/* ----- Back link ----- */
 .legal_back {
   margin-bottom: 24px;
 }
@@ -61,7 +60,6 @@
   color: var(--color-primary);
 }
 
-/* ----- Header ----- */
 .legal_header {
   margin-bottom: 40px;
   padding-bottom: 28px;
@@ -108,7 +106,6 @@
   flex-shrink: 0;
 }
 
-/* ----- Table of contents ----- */
 .legal_toc {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -157,7 +154,6 @@
   min-width: 18px;
 }
 
-/* ----- Body sections ----- */
 .legal_body {
   display: flex;
   flex-direction: column;
@@ -235,7 +231,6 @@
   border-color: var(--color-primary);
 }
 
-/* ----- Highlight box ----- */
 .legal_highlight {
   background: rgba(48, 60, 108, 0.07);
   border: 1px solid rgba(48, 60, 108, 0.18);
@@ -251,7 +246,6 @@
   color: var(--color-text) !important;
 }
 
-/* ----- Contact card ----- */
 .legal_contact {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -274,7 +268,6 @@
   margin: 0 !important;
 }
 
-/* ----- Footer nav ----- */
 .legal_footer-nav {
   margin-top: 56px;
   padding-top: 28px;
@@ -311,7 +304,6 @@
   opacity: 0.7;
 }
 
-/* ----- Cookie type cards ----- */
 .legal_cookie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

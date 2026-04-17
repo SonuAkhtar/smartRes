@@ -29,7 +29,6 @@
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
 }
 
-/* Progress dots */
 .ob_dots {
   display: flex;
   gap: 6px;
@@ -53,7 +52,6 @@
   background: var(--color-primary);
 }
 
-/* Slides viewport */
 .ob_slides-viewport {
   width: 100%;
   overflow: hidden;
@@ -70,7 +68,6 @@
   gap: 12px;
 }
 
-/* Illustration */
 .ob_illustration-wrap {
   width: 100%;
   max-width: 220px;
@@ -90,7 +87,6 @@
   height: 100%;
 }
 
-/* Badge */
 .ob_badge {
   display: inline-block;
   padding: 3px 12px;
@@ -103,7 +99,6 @@
   text-transform: uppercase;
 }
 
-/* Title */
 .ob_title {
   font-size: 1.45rem;
   font-weight: 800;
@@ -114,7 +109,6 @@
   line-height: 1.25;
 }
 
-/* Body */
 .ob_body {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
@@ -123,7 +117,6 @@
   max-width: 360px;
 }
 
-/* Actions */
 .ob_actions {
   width: 100%;
   display: flex;
@@ -162,7 +155,6 @@
 
 .ob_skip:hover { color: var(--color-text); }
 
-/* Mobile */
 @media (max-width: 520px) {
   .ob_panel { padding: 24px 20px 20px; }
   .ob_title { font-size: 1.25rem; }

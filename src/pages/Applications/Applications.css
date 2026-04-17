@@ -45,7 +45,6 @@
   margin: 0 auto;
 }
 
-/* ----- Header ----- */
 .applications_header {
   display: flex;
   align-items: center;
@@ -96,7 +95,6 @@
   font-size: var(--text-base);
 }
 
-/* ----- Stats row ----- */
 .applications_stats {
   display: flex;
   gap: 10px;
@@ -141,7 +139,6 @@
   color: #e05c7a;
 }
 
-/* ----- Add Form ----- */
 .applications_add-form {
   overflow: hidden;
   margin-bottom: 16px;
@@ -219,7 +216,6 @@
   color: var(--color-text);
 }
 
-/* ----- Filter tabs ----- */
 .applications_filters {
   display: flex;
   gap: 8px;
@@ -291,7 +287,6 @@
   margin-top: 40px;
 }
 
-/* ----- App Card ----- */
 .app-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -384,7 +379,6 @@
   white-space: nowrap;
 }
 
-/* ----- Status stepper ----- */
 .app-card-status-row {
   display: flex;
   align-items: center;
@@ -477,7 +471,6 @@
   font-weight: 700;
 }
 
-/* Rejected step */
 .app-card-status-steps
   .app-status-step:last-child.app-status-step-active
   .app-status-step-dot {
@@ -492,7 +485,6 @@
   color: #e05c7a;
 }
 
-/* Offer step */
 .app-card-status-steps
   .app-status-step:nth-child(4).app-status-step-active
   .app-status-step-dot {
@@ -507,7 +499,6 @@
   color: #10b981;
 }
 
-/* ----- Expanded section ----- */
 .app-card-expanded {
   overflow: hidden;
 }
@@ -620,7 +611,6 @@
   cursor: pointer;
 }
 
-/* ----- Card action bar ----- */
 .app-card-actions {
   display: flex;
   align-items: center;
@@ -696,7 +686,6 @@
   padding: 0;
 }
 
-/* ----- Dark mode ----- */
 [data-theme="dark"] .app-card {
   background: var(--color-surface);
   border-color: var(--color-border);
@@ -710,7 +699,6 @@
   background: var(--color-surface);
 }
 
-/* ----- Header actions (view toggle + add button) ----- */
 .applications_header-actions {
   display: flex;
   align-items: center;
@@ -751,7 +739,6 @@
   color: white;
 }
 
-/* ----- Kanban board ----- */
 .applications_kanban {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -800,7 +787,6 @@
   color: var(--color-text-muted);
 }
 
-/* Column accent colors */
 .applications_kanban-col-applied .applications_kanban-col-label {
   color: var(--color-primary);
 }
@@ -937,13 +923,11 @@
   padding: 16px 8px;
 }
 
-/* ----- Mobile ----- */
 @media (max-width: 600px) {
   .applications {
     padding: calc(var(--header-height) + 32px) 16px 64px;
   }
 
-  /* Kanban switches to 2-column scroll on mobile */
   .applications_kanban {
     grid-template-columns: repeat(3, 200px);
   }

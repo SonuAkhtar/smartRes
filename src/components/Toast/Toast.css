@@ -1,4 +1,3 @@
-/*----- Toast list portal -----*/
 .toast-list {
   position: fixed;
   top: calc(var(--header-height) + 14px);
@@ -14,7 +13,6 @@
   width: calc(100% - 40px);
 }
 
-/*----- Single toast -----*/
 .toast {
   pointer-events: all;
   position: relative;
@@ -33,7 +31,6 @@
   overflow: hidden;
 }
 
-/* Left accent bar */
 .toast::before {
   content: '';
   position: absolute;
@@ -48,7 +45,6 @@
 .toast--error::before   { background: var(--color-error); }
 .toast--info::before    { background: var(--color-accent, #f4976c); }
 
-/*----- Icon wrapper -----*/
 .toast__icon {
   flex-shrink: 0;
   width: 30px;
@@ -68,7 +64,6 @@
 [data-theme="dark"] .toast__icon--error   { color: #e07070; background: rgba(239, 68, 68, 0.18); }
 [data-theme="dark"] .toast__icon--info    { color: #f4976c; background: rgba(244, 151, 108, 0.14); }
 
-/*----- Message -----*/
 .toast__message {
   flex: 1;
   font-size: 0.8575rem;
@@ -78,7 +73,6 @@
   font-family: var(--font-body);
 }
 
-/*----- Undo button -----*/
 .toast__undo {
   flex-shrink: 0;
   padding: 3px 10px;
@@ -99,7 +93,6 @@
   border-color: var(--color-primary);
 }
 
-/*----- Dismiss button -----*/
 .toast__dismiss {
   flex-shrink: 0;
   width: 22px;
@@ -121,7 +114,6 @@
   color: var(--color-text);
 }
 
-/*----- Progress bar -----*/
 .toast__progress {
   position: absolute;
   bottom: 0;
@@ -141,14 +133,12 @@
   to   { width: 0%; }
 }
 
-/*----- Dark mode -----*/
 [data-theme="dark"] .toast {
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.4),
     0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
-/*----- Mobile -----*/
 @media (max-width: 520px) {
   .toast-list {
     right: 12px;

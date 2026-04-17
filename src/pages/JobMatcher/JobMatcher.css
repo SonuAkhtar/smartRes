@@ -6,7 +6,6 @@
   transition: background var(--transition-slow);
 }
 
-/*----- Light mode background -----*/
 .job-matcher_bg {
   position: fixed;
   inset: 0;
@@ -26,7 +25,6 @@
   transition: background var(--transition-slow);
 }
 
-/*----- Dark mode background -----*/
 [data-theme="dark"] .job-matcher_bg {
   background:
     radial-gradient(
@@ -42,7 +40,6 @@
     var(--gradient-hero);
 }
 
-/*----- Layout (sidebar + main) -----*/
 .job-matcher_layout {
   max-width: 1120px;
   margin: 0 auto;
@@ -59,7 +56,6 @@
   max-width: 760px;
 }
 
-/*----- Empty state -----*/
 .job-matcher_empty {
   text-align: center;
   padding: 80px 24px;
@@ -116,7 +112,6 @@
   box-shadow: 0 14px 32px rgba(230, 72, 51, 0.45);
 }
 
-/*----- Page header -----*/
 .job-matcher_header {
   text-align: center;
   margin-bottom: 44px;
@@ -170,7 +165,6 @@
   color: rgba(228, 233, 247, 0.55);
 }
 
-/*----- Input card -----*/
 .job-matcher_card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -189,7 +183,6 @@
   border-color: rgba(228, 233, 247, 0.1);
 }
 
-/*----- Company row -----*/
 .job-matcher_company-row {
   margin-bottom: 24px;
 }
@@ -333,7 +326,6 @@
   color: rgba(228, 233, 247, 0.28);
 }
 
-/*----- URL hint banner -----*/
 .job-matcher_url-hint {
   display: flex;
   align-items: flex-start;
@@ -389,7 +381,6 @@
   border-color: rgba(245, 158, 11, 0.18);
 }
 
-/* Local analysis fallback notice */
 .job-matcher_local-notice {
   display: flex;
   align-items: flex-start;
@@ -487,7 +478,6 @@
   }
 }
 
-/*----- Results -----*/
 .job-matcher_results {
   display: flex;
   flex-direction: column;
@@ -506,7 +496,6 @@
   }
 }
 
-/*----- Score card -----*/
 .job-matcher_score-card {
   display: flex;
   align-items: center;
@@ -592,7 +581,6 @@
   color: rgba(228, 233, 247, 0.55);
 }
 
-/*----- Result sections -----*/
 .job-matcher_section {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -704,7 +692,6 @@
   background: rgba(134, 151, 196, 0.12);
 }
 
-/*----- Tags -----*/
 .job-matcher_tags {
   display: flex;
   flex-wrap: wrap;
@@ -768,7 +755,6 @@
   flex-wrap: wrap;
 }
 
-/*----- Suggestions -----*/
 .job-matcher_suggestions-list {
   display: flex;
   flex-direction: column;
@@ -899,7 +885,6 @@
   color: #adbbda;
 }
 
-/*----- Score company label -----*/
 .job-matcher_score-company {
   font-size: var(--text-base);
   font-weight: 500;
@@ -910,7 +895,6 @@
   color: rgba(228, 233, 247, 0.42);
 }
 
-/*----- Action buttons -----*/
 .job-matcher_history-btn {
   padding: 12px 22px;
   background: transparent;
@@ -987,7 +971,6 @@
   box-shadow: 0 14px 32px rgba(230, 72, 51, 0.45);
 }
 
-/*----- Clipboard paste helper -----*/
 .job-matcher_jd-label-row {
   display: flex;
   align-items: center;
@@ -1027,7 +1010,6 @@
   cursor: not-allowed;
 }
 
-/*----- History sidebar -----*/
 .job-matcher_history-sidebar {
   width: 260px;
   flex-shrink: 0;
@@ -1141,7 +1123,6 @@
   color: var(--color-text);
 }
 
-/*----- Responsive -----*/
 @media (max-width: 900px) {
   .job-matcher_history-sidebar {
     display: none;

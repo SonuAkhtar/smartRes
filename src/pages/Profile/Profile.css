@@ -13,7 +13,6 @@
   gap: 18px;
 }
 
-/*----- Empty state -----*/
 .profile_empty {
   text-align: center;
   padding: 80px 24px;
@@ -55,7 +54,6 @@
   max-width: 360px;
 }
 
-/*----- Page header -----*/
 .profile_page-header {
   display: flex;
   align-items: center;
@@ -104,7 +102,6 @@
   font-family: var(--font-sans);
 }
 
-/*----- Card -----*/
 .profile_card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -116,7 +113,6 @@
   overflow: hidden;
 }
 
-/*----- Left border that draws in from top on hover -----*/
 .profile_card::before {
   content: '';
   position: absolute;
@@ -143,7 +139,6 @@
   border-color: rgba(17,100,102,0.32);
 }
 
-/*----- Card header -----*/
 .profile_card-header {
   display: flex;
   align-items: flex-start;
@@ -222,7 +217,6 @@
   font-family: var(--font-sans);
 }
 
-/*----- Add entry button -----*/
 .profile_add-entry-btn {
   display: inline-flex;
   align-items: center;
@@ -247,7 +241,6 @@
   box-shadow: 0 4px 12px rgba(17,100,102,0.15);
 }
 
-/*----- Field rows -----*/
 .profile_rows {
   display: flex;
   flex-direction: column;
@@ -331,7 +324,6 @@
   margin-top: 10px;
 }
 
-/*----- Icon buttons -----*/
 .profile_icon-btn {
   width: 28px;
   height: 28px;
@@ -358,7 +350,6 @@
   color: var(--color-error);
 }
 
-/*----- Inputs -----*/
 .profile_input {
   width: 100%;
   padding: 10px 13px;
@@ -386,7 +377,6 @@
   line-height: 1.65;
 }
 
-/*----- Save / Cancel -----*/
 .profile_save-btn {
   padding: 8px 18px;
   background: #303c6c;
@@ -424,7 +414,6 @@
   color: var(--color-text);
 }
 
-/*----- Chips (years of experience) -----*/
 .profile_chips {
   display: flex;
   flex-wrap: wrap;
@@ -457,7 +446,6 @@
   font-weight: 600;
 }
 
-/*----- Profile completeness ring -----*/
 .profile_header-right {
   display: flex;
   align-items: center;
@@ -500,7 +488,6 @@
   line-height: 1;
 }
 
-/*----- Skills cloud -----*/
 .profile_skills-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -524,7 +511,6 @@
   cursor: default;
 }
 
-/* Skill category colour variants */
 .profile_skill-pill--technical {
   background: rgba(48, 60, 108, 0.07);
   border-color: rgba(48, 60, 108, 0.2);
@@ -578,7 +564,6 @@
 .profile_skill-remove svg { width: 10px; height: 10px; }
 .profile_skill-remove:hover { background: var(--color-error-glow); color: var(--color-error); }
 
-/*----- Skill groups -----*/
 .profile_skills-grouped {
   display: flex;
   flex-direction: column;
@@ -597,7 +582,6 @@
   padding: 0 2px;
 }
 
-/* Inside grouped view, remove bottom margin from cloud */
 .profile_skills-grouped .profile_skills-cloud { margin-bottom: 0; }
 
 .profile_add-chip-btn {
@@ -630,7 +614,6 @@
 
 .profile_add-skill-input { flex: 1; max-width: 280px; }
 
-/*----- Timeline (experience / education) -----*/
 .profile_timeline {
   display: flex;
   flex-direction: column;
@@ -755,7 +738,6 @@
   padding: 4px 0 8px;
 }
 
-/*----- Entry form -----*/
 .profile_entry-form {
   border: 1.5px dashed rgba(17,100,102,0.3);
   border-radius: var(--radius-lg);
@@ -800,7 +782,6 @@
   padding-top: 2px;
 }
 
-/*----- Bottom buttons -----*/
 .profile_btn {
   display: inline-flex;
   align-items: center;
@@ -861,7 +842,6 @@
   padding-top: 6px;
 }
 
-/*----- Responsive -----*/
 @media (max-width: 600px) {
   .profile_card { padding: 20px 18px; }
   .profile_page-header { flex-direction: column; align-items: flex-start; }

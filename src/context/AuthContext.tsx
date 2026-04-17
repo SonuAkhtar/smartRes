@@ -13,6 +13,9 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<LoginResult>
   signup: (name: string, email: string, password: string) => Promise<SignupResult>
   logout: () => Promise<void>
+  loginWithGoogle: () => Promise<LoginResult>
+  sendPhoneOtp: (phone: string) => Promise<LoginResult>
+  verifyPhoneOtp: (phone: string, token: string) => Promise<LoginResult>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -63,8 +66,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut()
   }
 
+  // Requires Google OAuth provider enabled in Supabase Auth settings
+  const loginWithGoogle = async (): Promise<LoginResult> => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    })
+    if (error) return { ok: false, error: error.message }
+    return { ok: true }
+  }
+
+  // Requires SMS provider (e.g. Twilio) enabled in Supabase Auth > Providers > Phone
+  const sendPhoneOtp = async (phone: string): Promise<LoginResult> => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ phone })
+      if (error) return { ok: false, error: error.message }
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Network error. Check your connection and try again.' }
+    }
+  }
+
+  const verifyPhoneOtp = async (phone: string, token: string): Promise<LoginResult> => {
+    try {
+      const { error } = await supabase.auth.verifyOtp({ phone, token, type: 'sms' })
+      if (error) return { ok: false, error: error.message }
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Network error. Check your connection and try again.' }
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, loginWithGoogle, sendPhoneOtp, verifyPhoneOtp }}>
       {children}
     </AuthContext.Provider>
   )

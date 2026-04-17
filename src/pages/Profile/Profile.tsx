@@ -41,7 +41,6 @@ const cardVariants = {
   }),
 };
 
-/** Animates to the exact measured height so there are no jumps from `height: "auto"`. */
 function useAutoHeight() {
   const innerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
@@ -125,7 +124,6 @@ export default function Profile() {
     );
   }
 
-  /*----- Profile completeness -----*/
   const completenessFields = [
     !!local.name?.trim(),
     !!local.email?.trim(),
@@ -142,7 +140,6 @@ export default function Profile() {
   const completenessTotal = completenessFields.length;
   const completenessPct = (completenessScore / completenessTotal) * 100;
 
-  /*----- Skill categorisation -----*/
   const SKILL_CATEGORIES: Record<string, string[]> = {
     Technical: [
       "react",
@@ -264,12 +261,9 @@ export default function Profile() {
   const skillGroups =
     local.skills.length >= 10 ? categoriseSkills(local.skills) : null;
 
-  /*----- Persist helpers -----*/
-
   const persist = (updated: UserProfile) => {
     setLocal(updated);
     setProfile(updated);
-    // Fire save; don't block UI but log errors so they're visible in devtools
     if (user) saveProfile(user.id, updated).catch((err) => console.error('saveProfile:', err));
   };
 
@@ -280,8 +274,6 @@ export default function Profile() {
 
   const clearField = (updater: (p: UserProfile) => UserProfile) =>
     persist(updater(local));
-
-  /*----- Basic field helpers -----*/
 
   const startEdit = (key: FieldKey, val: string) => {
     setEditing(key);
@@ -311,8 +303,6 @@ export default function Profile() {
 
   const removeSkill = (skill: string) =>
     save((p) => ({ ...p, skills: p.skills.filter((s) => s !== skill) }));
-
-  /*----- Experience helpers -----*/
 
   const startEditExp = (exp: Experience | null) => {
     setEditingExpId(exp ? exp.id : "new");
@@ -358,8 +348,6 @@ export default function Profile() {
       experiences: p.experiences.filter((e) => e.id !== id),
     }));
 
-  /*----- Education helpers -----*/
-
   const startEditEdu = (edu: Education | null) => {
     setEditingEduId(edu ? edu.id : "new");
     setEduDraft(
@@ -398,8 +386,6 @@ export default function Profile() {
       ...p,
       educations: p.educations.filter((e) => e.id !== id),
     }));
-
-  /*----- Field component -----*/
 
   const Field = ({
     label,
@@ -538,8 +524,6 @@ export default function Profile() {
     </div>
   );
 
-  /*----- Experience entry form -----*/
-
   const ExpForm = ({
     onSave,
     onCancel,
@@ -632,8 +616,6 @@ export default function Profile() {
     );
   };
 
-  /*----- Education entry form -----*/
-
   const EduForm = ({
     onSave,
     onCancel,
@@ -717,7 +699,6 @@ export default function Profile() {
   return (
     <div className="profile">
       <div className="profile_container">
-        {/* Page header */}
         <motion.div
           className="profile_page-header"
           initial={{ opacity: 0, y: -16 }}
@@ -743,7 +724,6 @@ export default function Profile() {
             </div>
           </div>
           <div className="profile_header-right">
-            {/* Completeness ring */}
             <div
               className="profile_completeness"
               title={`${completenessScore} of ${completenessTotal} fields complete`}
@@ -809,7 +789,6 @@ export default function Profile() {
           </div>
         </motion.div>
 
-        {/* -----Contact Information ─────----- */}
         <motion.section
           className="profile_card"
           custom={0}
@@ -870,7 +849,6 @@ export default function Profile() {
           </div>
         </motion.section>
 
-        {/* -----Professional Details ───----- */}
         <motion.section
           className="profile_card"
           custom={1}
@@ -991,7 +969,6 @@ export default function Profile() {
           </div>
         </motion.section>
 
-        {/* -----Professional Summary ──----- */}
         <motion.section
           className="profile_card"
           custom={2}
@@ -1031,7 +1008,6 @@ export default function Profile() {
           />
         </motion.section>
 
-        {/* -----Skills ─────----- */}
         <motion.section
           className="profile_card"
           custom={3}
@@ -1061,7 +1037,6 @@ export default function Profile() {
             </div>
           </div>
           {skillGroups ? (
-            /* Grouped view for 10+ skills */
             <div className="profile_skills-grouped">
               {(Object.entries(skillGroups) as [string, string[]][])
                 .filter(([, skills]) => skills.length > 0)
@@ -1113,7 +1088,6 @@ export default function Profile() {
                 ))}
             </div>
           ) : (
-            /* Flat view for <10 skills */
             <div className="profile_skills-cloud">
               <AnimatePresence>
                 {local.skills.map((skill, i) => (
@@ -1226,7 +1200,6 @@ export default function Profile() {
           </AnimatePresence>
         </motion.section>
 
-        {/* -----Work Experience ───────----- */}
         <motion.section
           className="profile_card"
           custom={4}
@@ -1401,7 +1374,6 @@ export default function Profile() {
           </div>
         </motion.section>
 
-        {/* -----Education ─----- */}
         <motion.section
           className="profile_card"
           custom={5}
@@ -1567,7 +1539,6 @@ export default function Profile() {
           </div>
         </motion.section>
 
-        {/* -----Links ────----- */}
         <motion.section
           className="profile_card"
           custom={6}
@@ -1620,7 +1591,6 @@ export default function Profile() {
           </div>
         </motion.section>
 
-        {/* -----Actions ----- */}
         <motion.div
           className="profile_footer-actions"
           custom={7}

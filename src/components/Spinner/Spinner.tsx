@@ -2,10 +2,8 @@ import "./Spinner.css";
 
 interface SpinnerProps {
   size?: "xs" | "sm" | "md" | "lg";
-  /** Inherit color from parent (default) or override with a CSS color */
   color?: string;
   className?: string;
-  /** For screen readers - defaults to "Loading" */
   label?: string;
 }
 

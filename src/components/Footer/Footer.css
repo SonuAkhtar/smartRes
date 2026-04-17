@@ -176,7 +176,6 @@
   display: inline-block;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(210, 253, 255, 0.14);
-  text-stroke: 1.5px rgba(210, 253, 255, 0.14);
   transition:
     -webkit-text-stroke 0.25s ease,
     color 0.25s ease;
@@ -185,19 +184,16 @@
 
 [data-theme="dark"] .footer_wordmark-char {
   -webkit-text-stroke: 1.5px rgba(101, 204, 184, 0.15);
-  text-stroke: 1.5px rgba(101, 204, 184, 0.15);
 }
 
 .footer_wordmark-char:hover {
   color: rgba(244, 151, 108, 0.22);
   -webkit-text-stroke: 1.5px rgba(244, 151, 108, 0.55);
-  text-stroke: 1.5px rgba(244, 151, 108, 0.55);
 }
 
 [data-theme="dark"] .footer_wordmark-char:hover {
   color: rgba(101, 204, 184, 0.2);
   -webkit-text-stroke: 1.5px rgba(101, 204, 184, 0.55);
-  text-stroke: 1.5px rgba(101, 204, 184, 0.55);
 }
 
 .footer_hero {

@@ -45,7 +45,6 @@
   margin: 0 auto;
 }
 
-/* ----- Header ----- */
 .ip_header {
   text-align: center;
   margin-bottom: 36px;
@@ -80,7 +79,6 @@
   line-height: 1.65;
 }
 
-/* ----- Input Card ----- */
 .ip_card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -96,7 +94,6 @@
   border-color: var(--color-border);
 }
 
-/* ----- Source toggle ----- */
 .ip_source-toggle {
   display: inline-flex;
   background: var(--color-surface-raised);
@@ -132,7 +129,6 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-/* ----- Fields ----- */
 .ip_field {
   display: flex;
   flex-direction: column;
@@ -232,7 +228,6 @@
   padding: 24px 0 8px;
 }
 
-/* ----- Generate button ----- */
 .ip_generate-btn {
   width: 100%;
   padding: 15px 24px;
@@ -263,7 +258,6 @@
   transform: none;
 }
 
-/* ----- Results ----- */
 .ip_results {
   display: flex;
   flex-direction: column;
@@ -312,7 +306,6 @@
   color: var(--color-text);
 }
 
-/* ----- Category tabs ----- */
 .ip_category-tabs {
   display: flex;
   gap: 8px;
@@ -374,14 +367,12 @@
   padding: 0 2px;
 }
 
-/* ----- Questions list ----- */
 .ip_questions-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* ----- Question Card ----- */
 .ip-question {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -444,7 +435,6 @@
   letter-spacing: -0.01em;
 }
 
-/* ----- Tip ----- */
 .ip-question-tip-area {
 }
 
@@ -486,7 +476,6 @@
   background: rgba(48, 60, 108, 0.1);
 }
 
-/* ----- Results actions row ----- */
 .ip_results-actions {
   display: flex;
   align-items: center;
@@ -494,7 +483,6 @@
   flex-shrink: 0;
 }
 
-/* ----- Export buttons ----- */
 .ip_export-btn {
   display: inline-flex;
   align-items: center;
@@ -520,7 +508,6 @@
   border-color: var(--color-border-dark);
 }
 
-/* ----- Practice mode toggle button ----- */
 .ip_practice-toggle {
   display: inline-flex;
   align-items: center;
@@ -555,14 +542,12 @@
   background: rgba(48, 60, 108, 0.15);
 }
 
-/* ----- Practice Mode container ----- */
 .ip_practice-mode {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Progress bar */
 .ip_practice-progress {
   height: 4px;
   background: var(--color-border);
@@ -590,7 +575,6 @@
   color: var(--color-text-muted);
 }
 
-/* Navigation */
 .ip_practice-nav {
   display: flex;
   align-items: center;
@@ -650,7 +634,6 @@
   color: white;
 }
 
-/* Category filter row inside practice mode */
 .ip_practice-category-row {
   display: flex;
   align-items: center;
@@ -669,7 +652,6 @@
   white-space: nowrap;
 }
 
-/* ----- Mobile ----- */
 @media (max-width: 600px) {
   .ip {
     padding: calc(var(--header-height) + 32px) 16px 64px;
@@ -693,7 +675,6 @@
   }
 }
 
-/* ----- Print ----- */
 @media print {
   .ip_header,
   .ip_card,

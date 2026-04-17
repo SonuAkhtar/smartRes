@@ -172,7 +172,6 @@
   display: inline-block;
   color: transparent;
   -webkit-text-stroke: 2px rgba(48, 60, 108, 0.42);
-  text-stroke: 2px rgba(48, 60, 108, 0.42);
   transition:
     color 0.22s ease,
     -webkit-text-stroke 0.22s ease;
@@ -182,18 +181,15 @@
 .home_hero-accent-char:hover {
   color: rgba(244, 151, 108, 0.28);
   -webkit-text-stroke: 2px rgba(244, 151, 108, 0.72);
-  text-stroke: 2px rgba(244, 151, 108, 0.72);
 }
 
 [data-theme="dark"] .home_hero-accent-char {
   -webkit-text-stroke: 2px rgba(101, 204, 184, 0.28);
-  text-stroke: 2px rgba(101, 204, 184, 0.28);
 }
 
 [data-theme="dark"] .home_hero-accent-char:hover {
   color: rgba(101, 204, 184, 0.22);
   -webkit-text-stroke: 2px rgba(101, 204, 184, 0.62);
-  text-stroke: 2px rgba(101, 204, 184, 0.62);
 }
 
 .home_hero-subtitle {
@@ -2213,9 +2209,6 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   B – Particle canvas
-   ═══════════════════════════════════════════════════════════════ */
 .home_particles-canvas {
   position: absolute;
   inset: 0;
@@ -2264,9 +2257,6 @@
   color: rgba(228, 233, 247, 0.72);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   E – Feature card cursor spotlight
-   ═══════════════════════════════════════════════════════════════ */
 .home_feature-spotlight {
   position: absolute;
   inset: 0;

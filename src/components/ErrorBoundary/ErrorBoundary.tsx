@@ -22,7 +22,6 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // In production, send to error tracking (e.g. Sentry)
     console.error(
       "[ErrorBoundary] Uncaught error:",
       error,
