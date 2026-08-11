@@ -42,7 +42,7 @@ function initForm(
   const firstExp = profile?.experiences?.[0];
   const firstEdu = profile?.educations?.[0];
   return {
-    name: profile?.name || user?.name || "",
+    name: profile?.name || "",
     email: profile?.email || user?.email || "",
     phone: profile?.phone || "",
     location: profile?.location || "",

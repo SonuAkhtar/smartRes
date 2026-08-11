@@ -28,6 +28,7 @@ import TermsOfService from "./pages/Legal/TermsOfService";
 import CookiePolicy from "./pages/Legal/CookiePolicy";
 import NotFound from "./pages/NotFound/NotFound";
 import AuthConfirm from "./pages/AuthConfirm/AuthConfirm";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function AppLoadingScreen() {
   return (
@@ -164,6 +165,7 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/auth/confirm" element={<AuthConfirm />} />
+        <Route path="/auth/reset" element={<ResetPassword />} />
         <Route
           path="/profile-builder"
           element={

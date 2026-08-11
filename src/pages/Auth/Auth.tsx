@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FormEvent } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../components/Spinner/Spinner";
 import "./Auth.css";
 
 type Tab = "signin" | "signup";
+
+const USERNAME_MIN = 5;
+const USERNAME_RE = /^[a-zA-Z0-9_]+$/;
+
+type UsernameStatus =
+  | "idle"
+  | "short"
+  | "invalid"
+  | "checking"
+  | "available"
+  | "taken"
+  | "error";
 
 interface PasswordStrength {
   label: string;
@@ -31,14 +43,14 @@ function getPasswordStrength(pwd: string): PasswordStrength {
 }
 
 export default function Auth() {
-  const { login, signup, loginWithGoogle, user } = useAuth();
+  const { login, signup, checkUsernameAvailable, resetPassword, user } = useAuth();
   const navigate = useNavigate();
 
   // tab
   const [tab, setTab] = useState<Tab>("signin");
 
   // email form
-  const [name, setName]       = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail]     = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -47,12 +59,30 @@ export default function Auth() {
   const [error, setError]         = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading]     = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>("idle");
 
   const strength = tab === "signup" ? getPasswordStrength(password) : null;
 
+  useEffect(() => {
+    if (tab !== "signup") return;
+    const u = username.trim();
+
+    if (u.length === 0) { setUsernameStatus("idle"); return; }
+    if (u.length < USERNAME_MIN) { setUsernameStatus("short"); return; }
+    if (!USERNAME_RE.test(u)) { setUsernameStatus("invalid"); return; }
+
+    setUsernameStatus("checking");
+    const timer = setTimeout(async () => {
+      const { available, error } = await checkUsernameAvailable(u);
+      setUsernameStatus(error ? "error" : available ? "available" : "taken");
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [username, tab, checkUsernameAvailable]);
+
   if (user) return <Navigate to="/dashboard" replace />;
 
-  // ── Email / password ───────────────────────────────────────────────────────
+  // Email / password
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
@@ -64,9 +94,14 @@ export default function Auth() {
         if (!result.ok) { setError(result.error ?? "Invalid email or password."); return; }
         navigate("/dashboard");
       } else {
+        const u = username.trim();
+        if (u.length < USERNAME_MIN) { setError(`Username must be at least ${USERNAME_MIN} characters.`); return; }
+        if (!USERNAME_RE.test(u)) { setError("Username can only contain letters, numbers, and underscores."); return; }
+        if (usernameStatus === "taken") { setError("That username is already taken."); return; }
+        if (usernameStatus === "checking") { setError("Please wait, still checking that username."); return; }
         if (password !== confirm) { setError("Passwords do not match."); return; }
         if (password.length < 6)  { setError("Password must be at least 6 characters."); return; }
-        const result = await signup(name, email, password);
+        const result = await signup(u, email, password);
         if (!result.ok) {
           setError(result.error ?? "Could not create account. Try a different email.");
           return;
@@ -82,27 +117,35 @@ export default function Auth() {
     }
   };
 
-  // ── Google OAuth ───────────────────────────────────────────────────────────
-  const handleGoogleLogin = async () => {
+  const handleForgotPassword = async () => {
     setError("");
     setSuccessMsg("");
+    const em = email.trim();
+    if (!em.includes("@")) {
+      setError("Enter your email address first, then click Forgot Password.");
+      return;
+    }
     setLoading(true);
     try {
-      const result = await loginWithGoogle();
-      if (!result.ok) setError(result.error ?? "Google sign-in failed. Please try again.");
+      const result = await resetPassword(em);
+      if (!result.ok) {
+        setError(result.error ?? "Could not send reset email. Try again.");
+        return;
+      }
+      setSuccessMsg("Password reset email sent. Check your inbox.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ── Tab switching ──────────────────────────────────────────────────────────
+  // Tab switching
   const switchTab = (t: Tab) => {
     setTab(t);
     setError("");
     setSuccessMsg("");
   };
 
-  // ── Small helpers ──────────────────────────────────────────────────────────
+  // Small helpers
   const ErrorMsg = ({ msg }: { msg: string }) => (
     <div className="auth_error" role="alert">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -124,26 +167,21 @@ export default function Auth() {
     </div>
   );
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // Render
   return (
     <div className="auth">
       <div className="auth_bg" />
       <div className="auth_container">
-        <Link to="/" className="auth_logo">
-          <span className="auth_logo-icon">R</span>
-          <span className="auth_logo-text">SmartRes</span>
-        </Link>
-
         <div className="auth_card">
           <div className="auth_tabs">
             <button
               className={`auth_tab ${tab === "signin" ? "auth_tab-active" : ""}`}
               onClick={() => switchTab("signin")}
-            >Sign In</button>
+            >Login</button>
             <button
               className={`auth_tab ${tab === "signup" ? "auth_tab-active" : ""}`}
               onClick={() => switchTab("signup")}
-            >Sign Up</button>
+            >Signup</button>
             <div className={`auth_tab-indicator ${tab === "signup" ? "auth_tab-indicator-right" : ""}`} />
           </div>
 
@@ -160,23 +198,44 @@ export default function Auth() {
             <form className="auth_form" onSubmit={handleSubmit} noValidate>
               {tab === "signup" && (
                 <div className="auth_field">
-                  <label className="auth_field-label" htmlFor="name">Full Name</label>
+                  <label className="auth_field-label" htmlFor="username">Username</label>
                   <input
-                    id="name" type="text" className="auth_field-input"
-                    placeholder="Jane Doe" value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required autoFocus autoComplete="name"
+                    id="username" type="text" className="auth_field-input"
+                    placeholder="jane_doe" value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required autoFocus autoComplete="username"
+                    minLength={USERNAME_MIN}
+                    aria-describedby="username-status"
                   />
+                  {usernameStatus !== "idle" && (
+                    <span
+                      id="username-status"
+                      className={`auth_username-status auth_username-status--${usernameStatus}`}
+                      role="status"
+                    >
+                      {usernameStatus === "checking" && "Checking availability..."}
+                      {usernameStatus === "available" && "Username is available"}
+                      {usernameStatus === "taken" && "Username is already taken"}
+                      {usernameStatus === "short" && `Must be at least ${USERNAME_MIN} characters`}
+                      {usernameStatus === "invalid" && "Only letters, numbers, and underscores"}
+                      {usernameStatus === "error" && "Couldn't check right now, try again"}
+                    </span>
+                  )}
                 </div>
               )}
 
               <div className="auth_field">
-                <label className="auth_field-label" htmlFor="email">Email Address</label>
+                <label className="auth_field-label" htmlFor="email">
+                  {tab === "signin" ? "Email or Username" : "Email Address"}
+                </label>
                 <input
-                  id="email" type="email" className="auth_field-input"
-                  placeholder="jane@example.com" value={email}
+                  id="email" type={tab === "signin" ? "text" : "email"}
+                  className="auth_field-input"
+                  placeholder={tab === "signin" ? "jane@example.com or jane_doe" : "jane@example.com"}
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required autoFocus={tab === "signin"} autoComplete="email"
+                  required autoFocus={tab === "signin"}
+                  autoComplete={tab === "signin" ? "username" : "email"}
                 />
               </div>
 
@@ -187,10 +246,8 @@ export default function Auth() {
                     <button
                       type="button"
                       className="auth_forgot-link"
-                      onClick={() => {
-                        if (email) setSuccessMsg("Password reset email sent - check your inbox.");
-                        else setError("Enter your email address first, then click Forgot Password.");
-                      }}
+                      onClick={handleForgotPassword}
+                      disabled={loading}
                     >
                       Forgot password?
                     </button>
@@ -236,40 +293,11 @@ export default function Auth() {
 
               <button className="auth_submit-btn" type="submit" disabled={loading}>
                 {loading ? (
-                  <Spinner size="sm" color="rgba(44,53,49,0.9)" label="Signing in" />
-                ) : tab === "signin" ? "Sign In" : "Create Account"}
+                  <Spinner size="sm" color="#ffffff" label="Signing in" />
+                ) : tab === "signin" ? "Login" : "Create Account"}
               </button>
 
-              {tab === "signup" && (
-                <p className="auth_legal-note">
-                  By creating an account you agree to our{" "}
-                  <Link to="/terms" className="auth_legal-link">Terms of Service</Link>{" "}
-                  and{" "}
-                  <Link to="/privacy" className="auth_legal-link">Privacy Policy</Link>.
-                </p>
-              )}
             </form>
-
-            {/* ── Social login ── */}
-            <div className="auth_divider">
-              <span>or continue with</span>
-            </div>
-
-            <div className="auth_social">
-              <button
-                type="button" className="auth_social-btn"
-                onClick={handleGoogleLogin} disabled={loading}
-              >
-                <svg width="18" height="18" viewBox="0 0 18 18"
-                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8418H9v3.4818h4.8436c-.2086 1.125-.8427 2.0781-1.7959 2.7167v2.2581h2.9086c1.7018-1.5668 2.6836-3.874 2.6836-6.615z" fill="#4285F4"/>
-                  <path d="M9 18c2.43 0 4.4673-.8059 5.9564-2.1805l-2.9086-2.2581c-.8059.54-1.8368.8618-3.0477.8618-2.3436 0-4.3282-1.5832-5.036-3.7104H.9574v2.3318C2.4382 15.9832 5.4818 18 9 18z" fill="#34A853"/>
-                  <path d="M3.964 10.71c-.18-.54-.2818-1.1168-.2818-1.71s.1018-1.17.2818-1.71V4.9582H.9574C.3477 6.1732 0 7.5477 0 9s.3477 2.8268.9574 4.0418L3.964 10.71z" fill="#FBBC05"/>
-                  <path d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5813-2.5814C13.4632.8918 11.4259 0 9 0 5.4818 0 2.4382 2.0168.9574 4.9582L3.964 7.29C4.6718 5.1627 6.6564 3.5795 9 3.5795z" fill="#EA4335"/>
-                </svg>
-                Google
-              </button>
-            </div>
 
             <p className="auth_footer">
               {tab === "signin" ? "Don't have an account? " : "Already have an account? "}

@@ -1,5 +1,6 @@
 export interface User {
   id: string;
+  username: string;
   name: string;
   email: string;
 }
@@ -73,6 +74,11 @@ export type ApplicationStatus =
   | "offer"
   | "rejected";
 
+export interface StatusEvent {
+  status: ApplicationStatus;
+  date: string;
+}
+
 export interface JobApplication {
   id: string;
   jobEntryId?: string;
@@ -83,6 +89,7 @@ export interface JobApplication {
   status: ApplicationStatus;
   appliedAt?: string;
   notes: string;
+  statusHistory?: StatusEvent[];
   createdAt: string;
   updatedAt: string;
 }

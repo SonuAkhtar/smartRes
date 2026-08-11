@@ -8,8 +8,12 @@ import { useResume } from "../../context/ResumeContext";
 import { useToast } from "../../context/ToastContext";
 import { saveApplication, removeApplication } from "../../lib/db";
 import { EASE_SPRING, DURATION } from "../../lib/motion";
-import type { JobApplication, ApplicationStatus } from "../../types";
+import type { JobApplication, ApplicationStatus, StatusEvent } from "../../types";
 import "./Applications.css";
+
+function getHistory(app: JobApplication): StatusEvent[] {
+  return app.statusHistory ?? [{ status: app.status, date: app.createdAt }];
+}
 
 const STATUS_CONFIG: Record<
   ApplicationStatus,
@@ -40,12 +44,14 @@ function AppCard({
   app,
   index,
   onStatusChange,
+  onStatusDateChange,
   onNotesChange,
   onDelete,
 }: {
   app: JobApplication;
   index: number;
   onStatusChange: (status: ApplicationStatus) => void;
+  onStatusDateChange: (eventIndex: number, date: string) => void;
   onNotesChange: (notes: string) => void;
   onDelete: () => void;
 }) {
@@ -54,6 +60,8 @@ function AppCard({
   const [editingNotes, setEditingNotes] = useState(false);
   const [notesValue, setNotesValue] = useState(app.notes);
   const cfg = STATUS_CONFIG[app.status];
+  const history = getHistory(app);
+  const today = new Date().toISOString().slice(0, 10);
 
   const handleNotesSave = () => {
     onNotesChange(notesValue);
@@ -142,6 +150,31 @@ function AppCard({
               exit={{ opacity: 0, height: 0, transition: { duration: 0.18 } }}
             >
               <div className="app-card-expanded-inner">
+                <div className="app-card-section">
+                  <div className="app-card-section-title">Status History</div>
+                  <div className="app-history">
+                    {history.map((ev, i) => (
+                      <div className="app-history-row" key={`${ev.status}-${i}`}>
+                        <span
+                          className={`app-history-dot app-history-dot-${ev.status}`}
+                          aria-hidden="true"
+                        />
+                        <span className="app-history-label">
+                          {STATUS_CONFIG[ev.status].label}
+                        </span>
+                        <input
+                          type="date"
+                          className="app-history-date"
+                          value={ev.date.slice(0, 10)}
+                          max={today}
+                          onChange={(e) => onStatusDateChange(i, e.target.value)}
+                          aria-label={`Date ${STATUS_CONFIG[ev.status].label}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 {app.jdSnippet && (
                   <div className="app-card-section">
                     <div className="app-card-section-title">
@@ -309,6 +342,7 @@ export default function Applications() {
       jdSnippet: "",
       status: "saved",
       notes: "",
+      statusHistory: [{ status: "saved", date: now }],
       createdAt: now,
       updatedAt: now,
     };
@@ -320,12 +354,44 @@ export default function Applications() {
   };
 
   const handleStatusChange = (id: string, status: ApplicationStatus) => {
-    updateApplication(id, { status });
-    const updated = applications.find((a) => a.id === id);
-    if (user && updated)
+    const app = applications.find((a) => a.id === id);
+    if (!app || app.status === status) return;
+    const now = new Date().toISOString();
+    const base = getHistory(app);
+    const order = STATUS_CONFIG[status].order;
+    const existing = base.find((ev) => ev.status === status);
+    const statusHistory = [
+      ...base.filter((ev) => STATUS_CONFIG[ev.status].order < order),
+      { status, date: existing ? existing.date : now },
+    ];
+    updateApplication(id, { status, statusHistory });
+    if (user)
       saveApplication(user.id, {
-        ...updated,
+        ...app,
         status,
+        statusHistory,
+        updatedAt: now,
+      });
+  };
+
+  const handleStatusDateChange = (
+    id: string,
+    eventIndex: number,
+    date: string,
+  ) => {
+    const app = applications.find((a) => a.id === id);
+    if (!app) return;
+    const iso = date
+      ? new Date(`${date}T00:00:00`).toISOString()
+      : new Date().toISOString();
+    const statusHistory = getHistory(app).map((ev, i) =>
+      i === eventIndex ? { ...ev, date: iso } : ev,
+    );
+    updateApplication(id, { statusHistory });
+    if (user)
+      saveApplication(user.id, {
+        ...app,
+        statusHistory,
         updatedAt: new Date().toISOString(),
       });
   };
@@ -707,6 +773,7 @@ export default function Applications() {
                   secondaryCta={{
                     label: "View Job History →",
                     onClick: () => navigate("/job-history"),
+                    className: "applications_secondary-btn",
                   }}
                 />
               </motion.div>
@@ -732,6 +799,9 @@ export default function Applications() {
                       index={i}
                       onStatusChange={(status) =>
                         handleStatusChange(app.id, status)
+                      }
+                      onStatusDateChange={(eventIndex, date) =>
+                        handleStatusDateChange(app.id, eventIndex, date)
                       }
                       onNotesChange={(notes) =>
                         handleNotesChange(app.id, notes)
