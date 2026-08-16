@@ -203,7 +203,7 @@ export default function JobMatcher() {
                   </div>
                   <p className="job-matcher_history-sidebar-snippet">
                     {entry.jdSnippet.slice(0, 80)}
-                    {entry.jdSnippet.length > 80 ? "…" : ""}
+                    {entry.jdSnippet.length > 80 ? "..." : ""}
                   </p>
                 </div>
               ))}
@@ -237,7 +237,7 @@ export default function JobMatcher() {
                 <input
                   className="job-matcher_company-input"
                   type="text"
-                  placeholder="e.g. Google, Stripe, Airbnb…"
+                  placeholder="e.g. Google, Stripe, Airbnb..."
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                 />
@@ -281,7 +281,7 @@ export default function JobMatcher() {
               </div>
               <textarea
                 className="job-matcher_textarea"
-                placeholder="Paste the full job description here - role overview, responsibilities, required skills, nice-to-haves…"
+                placeholder="Paste the full job description here - role overview, responsibilities, required skills, nice-to-haves..."
                 value={jd}
                 onChange={(e) => handleJdChange(e.target.value)}
                 rows={13}
@@ -338,7 +338,7 @@ export default function JobMatcher() {
               >
                 {loading ? (
                   <>
-                    <Spinner size="sm" /> Analyzing your resume…
+                    <Spinner size="sm" /> Analyzing your resume...
                   </>
                 ) : (
                   <>Analyze & Get Suggestions →</>

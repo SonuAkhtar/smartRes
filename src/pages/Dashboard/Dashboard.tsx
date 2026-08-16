@@ -137,7 +137,7 @@ export default function Dashboard() {
       return;
     }
     setDownloading("pdf");
-    toastInfo("Generating your PDF…");
+    toastInfo("Generating your PDF...");
     try {
       const canvas = await html2canvas(el, {
         scale: 2,
@@ -1024,7 +1024,7 @@ export default function Dashboard() {
                         )
                       }
                       onBlur={() => draft && persistDraft(draft)}
-                      placeholder="Professional summary…"
+                      placeholder="Professional summary..."
                     />
                   </div>
                 </div>
@@ -1055,7 +1055,7 @@ export default function Dashboard() {
                   <div className="dashboard_drawer-skill-input-row">
                     <input
                       className="dashboard_drawer-input"
-                      placeholder="Add skill…"
+                      placeholder="Add skill..."
                       value={skillInput}
                       onChange={(e) => setSkillInput(e.target.value)}
                       onKeyDown={(e) => {
@@ -1124,7 +1124,7 @@ export default function Dashboard() {
                         )
                       }
                       onBlur={() => draft && persistDraft(draft)}
-                      placeholder="https://linkedin.com/in/…"
+                      placeholder="https://linkedin.com/in/..."
                     />
                   </div>
                   <div className="dashboard_drawer-field">
@@ -1141,7 +1141,7 @@ export default function Dashboard() {
                         )
                       }
                       onBlur={() => draft && persistDraft(draft)}
-                      placeholder="https://…"
+                      placeholder="https://..."
                     />
                   </div>
                 </div>
@@ -1171,7 +1171,7 @@ export default function Dashboard() {
           >
             {downloading === "pdf" ? (
               <>
-                <Spinner size="sm" /> Generating PDF…
+                <Spinner size="sm" /> Generating PDF...
               </>
             ) : (
               "⬇ Download as PDF"
@@ -1184,7 +1184,7 @@ export default function Dashboard() {
           >
             {downloading === "docx" ? (
               <>
-                <Spinner size="sm" /> Generating DOCX…
+                <Spinner size="sm" /> Generating DOCX...
               </>
             ) : (
               "⬇ Download as Word (.docx)"

@@ -153,7 +153,7 @@ function getSectionText(text: string, headers: string[]): string {
   const start = match.index + match[0].length;
 
   const nextSectionPattern =
-    /\n[ \t]*([A-Z][A-Z &/\-]{2,}|[A-Z][a-z]+(?: [A-Z][a-z]+){0,3})[ \t]*(?::|$)/gm;
+    /\n[ \t]*([A-Z][A-Z &/-]{2,}|[A-Z][a-z]+(?: [A-Z][a-z]+){0,3})[ \t]*(?::|$)/gm;
   nextSectionPattern.lastIndex = start;
   const nextMatch = nextSectionPattern.exec(text);
   const end = nextMatch ? nextMatch.index : Math.min(start + 1400, text.length);
@@ -189,7 +189,7 @@ function splitExperienceBlocks(
     const hasContent = current.some((l) => l.trim().length > 15);
     const isNewEntry =
       hasContent &&
-      (/^[A-Za-z][A-Za-z\s,\.\&]+\s*[|–\-]\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\d{4})/i.test(
+      (/^[A-Za-z][A-Za-z\s,.&]+\s*[|–-]\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\d{4})/i.test(
         t,
       ) ||
         /^\d{4}\s*[-–]\s*(?:\d{4}|present|current|now)/i.test(t) ||
@@ -305,12 +305,12 @@ export function parseResumeText(raw: string): ParsedFields {
     .filter(Boolean);
 
   const emailMatch = text.match(
-    /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}/,
+    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/,
   );
   if (emailMatch) result.email = emailMatch[0].trim();
 
   const phoneMatch = text.match(
-    /(?:\+\d{1,3}[\s.\-]?)?(?:\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}|\d{10})/,
+    /(?:\+\d{1,3}[\s.-]?)?(?:\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}|\d{10})/,
   );
   if (phoneMatch) result.phone = phoneMatch[0].replace(/\s+/g, " ").trim();
 
@@ -332,7 +332,7 @@ export function parseResumeText(raw: string): ParsedFields {
 
   const portPatterns = [
     /(?:https?:\/\/)?(?:www\.)?(?:gitlab\.com|behance\.net|dribbble\.com)\/[\w\-._]+/i,
-    /(?:https?:\/\/)?[\w\-]+\.(?:io|dev|me|site|app|xyz|online|tech)(?:\/[\w\-._/]+)?(?=[\s,|]|$)/i,
+    /(?:https?:\/\/)?[\w-]+\.(?:io|dev|me|site|app|xyz|online|tech)(?:\/[\w\-._/]+)?(?=[\s,|]|$)/i,
   ];
   for (const pp of portPatterns) {
     const pm = text.match(pp);
@@ -347,7 +347,7 @@ export function parseResumeText(raw: string): ParsedFields {
     /engineer|developer|manager|designer|analyst|consultant|specialist|architect|intern|director|officer|scientist|executive|founder|leader|head\b/i;
 
   const isNameLike = (raw: string): string | null => {
-    const clean = raw.replace(/[^a-zA-Z\s'.\-]/g, "").trim();
+    const clean = raw.replace(/[^a-zA-Z\s'.-]/g, "").trim();
     if (clean.length < 3 || clean.length > 55) return null;
     const words = clean.split(/\s+/);
     if (words.length < 2 || words.length > 5) return null;
@@ -386,7 +386,7 @@ export function parseResumeText(raw: string): ParsedFields {
         !line.toLowerCase().includes(result.email.toLowerCase())
       )
         continue;
-      for (const part of line.split(/[|•\/;,]/).map((p) => p.trim())) {
+      for (const part of line.split(/[|•/;,]/).map((p) => p.trim())) {
         if (
           part.includes("@") ||
           /^\+?\d/.test(part) ||
@@ -404,7 +404,7 @@ export function parseResumeText(raw: string): ParsedFields {
   }
 
   const locLabelMatch = text.match(
-    /(?:location|address|based\s+in|city)[:\s]+([A-Z][a-zA-Z\s,.\-]{3,60}?)(?=\s*(?:\||•|\n|$))/i,
+    /(?:location|address|based\s+in|city)[:\s]+([A-Z][a-zA-Z\s,.-]{3,60}?)(?=\s*(?:\||•|\n|$))/i,
   );
   if (locLabelMatch) {
     const loc = locLabelMatch[1].trim().replace(/\s+/g, " ");
@@ -414,7 +414,7 @@ export function parseResumeText(raw: string): ParsedFields {
 
   if (!result.location) {
     const locPatterns = [
-      /\b([A-Z][a-zA-Z ]{1,20}),\s*([A-Z]{2})\b(?!\s*[\d\-])/,
+      /\b([A-Z][a-zA-Z ]{1,20}),\s*([A-Z]{2})\b(?!\s*[\d-])/,
       /\b([A-Z][a-z]+(?: [A-Z][a-z]+)?),\s*(Maharashtra|Karnataka|Tamil Nadu|Delhi|Telangana|Andhra Pradesh|Gujarat|Rajasthan|Uttar Pradesh|West Bengal|Kerala|Punjab|Haryana|Madhya Pradesh|Bihar|Odisha|Assam|Jharkhand|Uttarakhand|Himachal Pradesh|Chhattisgarh|Goa)\b/i,
       /\b([A-Z][a-z]+(?: [A-Z][a-z]+)?),\s*(India|USA|UK|Canada|Australia|Germany|France|Singapore|UAE|Netherlands|Ireland|New Zealand|South Africa|Pakistan|Bangladesh|Sri Lanka|Malaysia)\b/i,
     ];
@@ -867,9 +867,9 @@ export function parseResumeText(raw: string): ParsedFields {
       const nums = allYears.map(Number);
       const span = Math.max(...nums) - Math.min(...nums);
       if (span < 1) result.yearsOfExperience = "Less than 1 year";
-      else if (span <= 3) result.yearsOfExperience = "1–3 years";
-      else if (span <= 5) result.yearsOfExperience = "3–5 years";
-      else if (span <= 10) result.yearsOfExperience = "5–10 years";
+      else if (span <= 3) result.yearsOfExperience = "1-3 years";
+      else if (span <= 5) result.yearsOfExperience = "3-5 years";
+      else if (span <= 10) result.yearsOfExperience = "5-10 years";
       else result.yearsOfExperience = "10+ years";
     }
 

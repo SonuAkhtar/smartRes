@@ -200,7 +200,7 @@ export default function CommandPalette({ open, onClose }: CommandPaletteProps) {
                 ref={inputRef}
                 className="cp_search-input"
                 type="text"
-                placeholder="Search commands…"
+                placeholder="Search commands..."
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 aria-label="Search commands"

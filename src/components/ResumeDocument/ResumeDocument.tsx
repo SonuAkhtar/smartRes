@@ -13,7 +13,6 @@ export default function ResumeDocument({ profile, tailored }: Props) {
 
   return (
     <div className="resume-document" id="resume-preview">
-      {/* Header */}
       <div className="resume-document_header">
         <h1 className="resume-document_name">{profile.name}</h1>
         <div className="resume-document_job-headline">{profile.title}</div>
@@ -51,7 +50,6 @@ export default function ResumeDocument({ profile, tailored }: Props) {
         </div>
       </div>
 
-      {/* Summary */}
       {summary && (
         <section className="resume-document_section">
           <h2 className="resume-document_section-title">Professional Summary</h2>
@@ -60,7 +58,6 @@ export default function ResumeDocument({ profile, tailored }: Props) {
         </section>
       )}
 
-      {/* Skills */}
       {(profile.skills.length > 0 || suggestedSkills.length > 0) && (
         <section className="resume-document_section">
           <h2 className="resume-document_section-title">Skills</h2>
@@ -83,7 +80,6 @@ export default function ResumeDocument({ profile, tailored }: Props) {
         </section>
       )}
 
-      {/* Experience */}
       {profile.experiences?.length > 0 && (
         <section className="resume-document_section">
           <h2 className="resume-document_section-title">Experience</h2>
@@ -107,7 +103,6 @@ export default function ResumeDocument({ profile, tailored }: Props) {
         </section>
       )}
 
-      {/* Education */}
       {profile.educations?.length > 0 && (
         <section className="resume-document_section">
           <h2 className="resume-document_section-title">Education</h2>

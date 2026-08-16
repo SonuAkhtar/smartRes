@@ -655,7 +655,7 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
     category: "situational",
     question:
       "If you joined this team tomorrow, what would your first 30 days look like?",
-    tip: "Structure around listen → understand → contribute. Show curiosity and an intent to ship something small early.",
+    tip: "Structure around listen, understand, then contribute. Show curiosity and an intent to ship something small early.",
   },
   {
     category: "situational",
@@ -768,7 +768,7 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
   {
     category: "role-specific",
     question:
-      "How do you see this role evolving over the next 2–3 years, and where do you want to be?",
+      "How do you see this role evolving over the next 2-3 years, and where do you want to be?",
     tip: "Align your ambition with the company's direction. Show you want to grow within the organisation, not just through it.",
   },
   {
@@ -793,7 +793,7 @@ const FALLBACK_QUESTIONS: InterviewQuestion[] = [
     category: "role-specific",
     question:
       "What questions do you have for us about the role, the team, or the company?",
-    tip: "Always prepare 3–5 thoughtful questions. Ask about team challenges, success metrics for this role, and engineering culture.",
+    tip: "Always prepare 3-5 thoughtful questions. Ask about team challenges, success metrics for this role, and engineering culture.",
   },
 ];
 
@@ -857,7 +857,6 @@ Rules:
       .trim();
     const parsed = JSON.parse(clean) as InterviewQuestion[];
 
-    // Validate categories
     const valid: QuestionCategory[] = [
       "behavioral",
       "technical",

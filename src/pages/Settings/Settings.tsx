@@ -30,7 +30,6 @@ export default function Settings() {
     () => localStorage.getItem("notif_job_match_tips") === "true",
   );
 
-  // Delete account confirm
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
 
@@ -100,7 +99,6 @@ export default function Settings() {
           </p>
         </motion.div>
 
-        {/* ----- Account ----- */}
         <motion.section
           className="settings_section"
           initial={{ opacity: 0, y: 20 }}
@@ -198,7 +196,6 @@ export default function Settings() {
           </div>
         </motion.section>
 
-        {/* ----- Notifications ----- */}
         <motion.section
           className="settings_section"
           initial={{ opacity: 0, y: 20 }}
@@ -251,7 +248,6 @@ export default function Settings() {
           </div>
         </motion.section>
 
-        {/* ----- Appearance ----- */}
         <motion.section
           className="settings_section"
           initial={{ opacity: 0, y: 20 }}
@@ -332,7 +328,6 @@ export default function Settings() {
           </div>
         </motion.section>
 
-        {/* ----- Data & Privacy ----- */}
         <motion.section
           className="settings_section"
           initial={{ opacity: 0, y: 20 }}

@@ -10,7 +10,6 @@ const SLIDES = [
     body: "SmartRes tailors your resume to any job in seconds - highlighting the right skills, fixing gaps, and generating a polished CV that gets past ATS filters.",
     illustration: (
       <svg viewBox="0 0 120 96" fill="none" className="ob_illustration">
-        {/* Resume sheet */}
         <rect
           x="20"
           y="8"
@@ -81,7 +80,6 @@ const SLIDES = [
           fill="var(--color-border)"
           opacity="0.6"
         />
-        {/* AI sparkle */}
         <circle
           cx="90"
           cy="22"
@@ -103,7 +101,6 @@ const SLIDES = [
     body: "Answer one question at a time - or just upload your existing resume and we'll auto-fill everything. Your profile is the foundation for every tailored resume.",
     illustration: (
       <svg viewBox="0 0 120 96" fill="none" className="ob_illustration">
-        {/* Person circle */}
         <circle
           cx="60"
           cy="32"
@@ -126,7 +123,6 @@ const SLIDES = [
           strokeLinecap="round"
           opacity="0.4"
         />
-        {/* Progress steps */}
         {[0, 1, 2, 3].map((i) => (
           <g key={i}>
             <circle
@@ -169,7 +165,6 @@ const SLIDES = [
     body: "Paste any job description and get your tailored resume with a match score, missing skills highlighted, and AI-suggested improvements - in seconds.",
     illustration: (
       <svg viewBox="0 0 120 96" fill="none" className="ob_illustration">
-        {/* Two documents */}
         <rect
           x="8"
           y="16"
@@ -190,7 +185,6 @@ const SLIDES = [
           stroke="var(--color-primary)"
           strokeWidth="1.5"
         />
-        {/* Left doc lines */}
         {[28, 36, 44, 52, 60, 68].map((y, i) => (
           <rect
             key={y}
@@ -203,7 +197,6 @@ const SLIDES = [
             opacity="0.7"
           />
         ))}
-        {/* Right doc lines with highlights */}
         {[28, 36, 44, 52, 60, 68].map((y, i) => (
           <rect
             key={y}
@@ -216,7 +209,6 @@ const SLIDES = [
             opacity={i < 3 ? "0.35" : "0.7"}
           />
         ))}
-        {/* Arrow between */}
         <path
           d="M57 48l6 0M60 45l3 3-3 3"
           stroke="var(--color-primary)"
@@ -224,7 +216,6 @@ const SLIDES = [
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {/* Match score chip */}
         <rect
           x="72"
           y="10"
@@ -294,7 +285,6 @@ export default function OnboardingModal({ onClose }: OnboardingModalProps) {
         exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Progress dots */}
         <div className="ob_dots" aria-label="Slide progress">
           {SLIDES.map((_, i) => (
             <button
@@ -306,7 +296,6 @@ export default function OnboardingModal({ onClose }: OnboardingModalProps) {
           ))}
         </div>
 
-        {/* Slide content */}
         <div className="ob_slides-viewport">
           <AnimatePresence mode="wait" initial={false} custom={dir}>
             <motion.div
@@ -328,7 +317,6 @@ export default function OnboardingModal({ onClose }: OnboardingModalProps) {
           </AnimatePresence>
         </div>
 
-        {/* Actions */}
         <div className="ob_actions">
           <button className="ob_cta" onClick={handleCTA}>
             {isLast ? "Let's build your profile →" : "Next →"}

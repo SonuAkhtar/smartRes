@@ -13,7 +13,9 @@ function AppIntro({ onDone }: { onDone: () => void }) {
   const [pct, setPct] = useState(0);
   const [exiting, setExiting] = useState(false);
   const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  });
 
   useEffect(() => {
     const duration = 1100;
@@ -456,23 +458,6 @@ export default function Home() {
       );
 
       gsap.fromTo(
-        ".home_step-connector",
-        { scaleX: 0, transformOrigin: "left center" },
-        {
-          scaleX: 1,
-          stagger: 0.14,
-          duration: 0.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".home_steps-grid",
-            start: "top 78%",
-            once: true,
-          },
-          delay: 0.4,
-        },
-      );
-
-      gsap.fromTo(
         ".home_testimonial-card",
         { opacity: 0, y: 36, scale: 0.97 },
         {
@@ -718,7 +703,7 @@ export default function Home() {
                 </div>
                 <div className="home_slide-ai-tip">
                   <span className="home_slide-ai-label">AI Tip</span>
-                  Use the STAR method: Situation → Task → Action → Result
+                  Use the STAR method: Situation, Task, Action, Result
                 </div>
                 <button className="home_slide-record-btn">
                   <span className="home_slide-record-dot" />

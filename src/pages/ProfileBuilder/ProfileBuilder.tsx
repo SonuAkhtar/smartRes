@@ -692,9 +692,9 @@ export default function ProfileBuilder() {
           >
             {[
               "Less than 1 year",
-              "1–3 years",
-              "3–5 years",
-              "5–10 years",
+              "1-3 years",
+              "3-5 years",
+              "5-10 years",
               "10+ years",
             ].map((opt) => (
               <button
@@ -727,7 +727,7 @@ export default function ProfileBuilder() {
                 ref={inputRef as React.RefObject<HTMLInputElement>}
                 className="profile-builder_input"
                 type="text"
-                placeholder="e.g. React, Python, Leadership…"
+                placeholder="e.g. React, Python, Leadership..."
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyDown={handleSkillKeyDown}
@@ -898,7 +898,7 @@ export default function ProfileBuilder() {
             <input
               className="profile-builder_input profile-builder_input-sm"
               type="text"
-              placeholder="Duration - e.g. Jan 2022 – Present"
+              placeholder="Duration - e.g. Jan 2022 - Present"
               value={form.duration}
               onChange={(e) => setField("duration", e.target.value)}
             />
@@ -907,7 +907,7 @@ export default function ProfileBuilder() {
             {fieldBadge("jobDesc")}
             <textarea
               className="profile-builder_input profile-builder_input-textarea"
-              placeholder="Key responsibilities and achievements…"
+              placeholder="Key responsibilities and achievements..."
               value={form.jobDesc}
               onChange={(e) => setField("jobDesc", e.target.value)}
               rows={3}
@@ -952,14 +952,14 @@ export default function ProfileBuilder() {
     {
       label: "Summary",
       question: "Write a brief professional summary.",
-      hint: "2–4 sentences about your expertise and what you bring to the table.",
+      hint: "2-4 sentences about your expertise and what you bring to the table.",
       content: (
         <div className="profile-builder_field-wrap">
           {fieldBadge("summary")}
           <textarea
             ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             className="profile-builder_input profile-builder_input-textarea profile-builder_input-large"
-            placeholder="Experienced engineer with 5+ years building scalable web applications…"
+            placeholder="Experienced engineer with 5+ years building scalable web applications..."
             value={form.summary}
             onChange={(e) => setField("summary", e.target.value)}
             rows={5}
@@ -1099,7 +1099,7 @@ export default function ProfileBuilder() {
             <div className="profile-builder_parsing">
               <div className="profile-builder_parsing-icon">🔍</div>
               <h2 className="profile-builder_parsing-title">
-                Reading your resume…
+                Reading your resume...
               </h2>
               <p className="profile-builder_parsing-subtitle">
                 Extracting your professional details intelligently
@@ -1259,7 +1259,7 @@ export default function ProfileBuilder() {
                 }
               >
                 {saving
-                  ? "Saving…"
+                  ? "Saving..."
                   : step === TOTAL_STEPS - 1
                     ? hasExisting
                       ? "Update Profile →"

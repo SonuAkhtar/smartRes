@@ -177,11 +177,9 @@ function EntryCard({
       transition={{ duration: 0.45, delay: index * 0.06, ease: EASE_SPRING }}
       layout
     >
-      {/* Top accent bar */}
       <div className={`jh-card-accent jh-card-accent-${scoreCls}`} />
 
       <div className="jh-card-body">
-        {/* Main row */}
         <div className="jh-card-main">
           <ScoreRing score={entry.matchScore} />
 
@@ -209,10 +207,8 @@ function EntryCard({
               </div>
             </div>
 
-            {/* Snippet */}
-            <p className="jh-card-snippet">{entry.jdSnippet}…</p>
+            <p className="jh-card-snippet">{entry.jdSnippet}...</p>
 
-            {/* Skills preview */}
             {(entry.matchedSkills.length > 0 || entry.suggestedSkills.length > 0) && (
               <div className="jh-skills-row">
                 {entry.matchedSkills.slice(0, 4).map(s => (
@@ -231,7 +227,6 @@ function EntryCard({
           </div>
         </div>
 
-        {/* Expanded section */}
         <AnimatePresence initial={false}>
           {expanded && (
             <motion.div
@@ -312,7 +307,6 @@ function EntryCard({
           )}
         </AnimatePresence>
 
-        {/* Download / use actions */}
         <div className="jh-resume-actions">
           {profile && (
             <>
@@ -372,7 +366,6 @@ function EntryCard({
           </button>
         </div>
 
-        {/* Actions bar */}
         <div className="jh-card-actions">
           <button className="jh-toggle-btn" onClick={() => setExpanded(v => !v)}>
             <motion.svg

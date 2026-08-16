@@ -95,11 +95,9 @@ function ToastIcon({ variant }: { variant: ToastVariant }) {
 function SingleToast({
   item,
   onDismiss,
-  onUndo: _onUndo,
 }: {
   item: ToastItem;
   onDismiss: () => void;
-  onUndo?: () => void;
 }) {
   return (
     <motion.li

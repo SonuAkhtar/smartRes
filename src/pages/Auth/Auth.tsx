@@ -46,16 +46,13 @@ export default function Auth() {
   const { login, signup, checkUsernameAvailable, resetPassword, user } = useAuth();
   const navigate = useNavigate();
 
-  // tab
   const [tab, setTab] = useState<Tab>("signin");
 
-  // email form
   const [username, setUsername] = useState("");
   const [email, setEmail]     = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
-  // feedback
   const [error, setError]         = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading]     = useState(false);
@@ -82,7 +79,6 @@ export default function Auth() {
 
   if (user) return <Navigate to="/dashboard" replace />;
 
-  // Email / password
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
@@ -138,14 +134,12 @@ export default function Auth() {
     }
   };
 
-  // Tab switching
   const switchTab = (t: Tab) => {
     setTab(t);
     setError("");
     setSuccessMsg("");
   };
 
-  // Small helpers
   const ErrorMsg = ({ msg }: { msg: string }) => (
     <div className="auth_error" role="alert">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -167,7 +161,6 @@ export default function Auth() {
     </div>
   );
 
-  // Render
   return (
     <div className="auth">
       <div className="auth_bg" />

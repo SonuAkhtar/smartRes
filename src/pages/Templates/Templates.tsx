@@ -20,7 +20,6 @@ const TEMPLATES: Array<{
     pro: false,
     preview: (
       <svg viewBox="0 0 140 180" fill="none" className="tmpl_svg">
-        {/* Header block */}
         <rect
           x="12"
           y="12"
@@ -46,7 +45,6 @@ const TEMPLATES: Array<{
           rx="1.5"
           fill="var(--color-border)"
         />
-        {/* Divider */}
         <rect
           x="12"
           y="44"
@@ -55,7 +53,6 @@ const TEMPLATES: Array<{
           fill="var(--color-primary)"
           opacity="0.25"
         />
-        {/* Section rows */}
         {[52, 76, 100, 124, 148].map((y, i) => (
           <g key={y}>
             <rect
@@ -97,7 +94,6 @@ const TEMPLATES: Array<{
     pro: false,
     preview: (
       <svg viewBox="0 0 140 180" fill="none" className="tmpl_svg">
-        {/* Sidebar */}
         <rect
           x="0"
           y="0"
@@ -127,7 +123,6 @@ const TEMPLATES: Array<{
             fill="var(--color-border)"
           />
         ))}
-        {/* Main content */}
         <rect
           x="56"
           y="12"
@@ -176,7 +171,6 @@ const TEMPLATES: Array<{
     pro: true,
     preview: (
       <svg viewBox="0 0 140 180" fill="none" className="tmpl_svg">
-        {/* Centered name */}
         <rect
           x="30"
           y="14"
@@ -194,7 +188,6 @@ const TEMPLATES: Array<{
           rx="1.5"
           fill="var(--color-border)"
         />
-        {/* Thin divider */}
         <rect
           x="50"
           y="36"
@@ -203,7 +196,6 @@ const TEMPLATES: Array<{
           fill="var(--color-primary)"
           opacity="0.3"
         />
-        {/* Spaced sections */}
         {[48, 80, 116, 150].map((y, i) => (
           <g key={y}>
             <rect
@@ -254,7 +246,6 @@ const TEMPLATES: Array<{
     pro: true,
     preview: (
       <svg viewBox="0 0 140 180" fill="none" className="tmpl_svg">
-        {/* Top colour band */}
         <rect
           x="0"
           y="0"
@@ -280,7 +271,6 @@ const TEMPLATES: Array<{
           rx="1.5"
           fill="rgba(17,100,102,0.35)"
         />
-        {/* Two columns */}
         <rect
           x="12"
           y="48"
@@ -323,7 +313,6 @@ const TEMPLATES: Array<{
             opacity="0.65"
           />
         ))}
-        {/* Full-width section */}
         <rect
           x="12"
           y="112"
@@ -371,7 +360,6 @@ export default function Templates() {
     <div className="templates">
       <div className="templates_bg" aria-hidden="true" />
       <div className="templates_container">
-        {/* Header */}
         <motion.div
           className="templates_header"
           variants={fadeUpVariants}
@@ -386,7 +374,6 @@ export default function Templates() {
           </p>
         </motion.div>
 
-        {/* Grid */}
         <motion.div
           className="templates_grid"
           variants={{
@@ -405,21 +392,17 @@ export default function Templates() {
                 className={`templates_card ${isActive ? "templates_card-active" : ""} ${tmpl.pro ? "templates_card-pro-locked" : ""}`}
                 variants={fadeUpVariants}
               >
-                {/* Pro badge */}
                 {tmpl.pro && <span className="templates_pro-badge">Pro</span>}
 
-                {/* Active badge */}
                 {isActive && (
                   <span className="templates_active-badge">Active</span>
                 )}
 
-                {/* Preview */}
                 <div
                   className="templates_preview"
                 >
                   {tmpl.preview}
 
-                  {/* Pro lock overlay */}
                   {tmpl.pro && (
                     <div className="templates_lock-overlay">
                       <div className="templates_lock-content">
@@ -453,7 +436,6 @@ export default function Templates() {
                   )}
                 </div>
 
-                {/* Info */}
                 <div className="templates_card-body">
                   <h3 className="templates_card-name">{tmpl.name}</h3>
                   <p className="templates_card-desc">{tmpl.desc}</p>

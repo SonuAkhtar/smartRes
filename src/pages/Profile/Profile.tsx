@@ -516,7 +516,7 @@ export default function Profile() {
             <span
               className={`profile_row-value ${!value ? "profile_row-value-empty" : ""}`}
             >
-              {value || `Add ${label.toLowerCase()}…`}
+              {value || `Add ${label.toLowerCase()}...`}
             </span>
           </motion.div>
         )}
@@ -580,7 +580,7 @@ export default function Profile() {
             <label className="profile_form-label">Duration</label>
             <input
               className="profile_input"
-              placeholder="Jan 2022 – Present"
+              placeholder="Jan 2022 - Present"
               value={expDraft.duration}
               onChange={(e) =>
                 setExpDraft((d) => ({ ...d, duration: e.target.value }))
@@ -592,7 +592,7 @@ export default function Profile() {
             <textarea
               className="profile_input profile_input-textarea"
               rows={3}
-              placeholder="Key responsibilities and achievements…"
+              placeholder="Key responsibilities and achievements..."
               value={expDraft.description}
               onChange={(e) =>
                 setExpDraft((d) => ({ ...d, description: e.target.value }))
@@ -925,9 +925,9 @@ export default function Profile() {
                     <div className="profile_chips">
                       {[
                         "Less than 1 year",
-                        "1–3 years",
-                        "3–5 years",
-                        "5–10 years",
+                        "1-3 years",
+                        "3-5 years",
+                        "5-10 years",
                         "10+ years",
                       ].map((opt) => (
                         <button
@@ -960,7 +960,7 @@ export default function Profile() {
                     <span
                       className={`profile_row-value ${!local.yearsOfExperience ? "profile_row-value-empty" : ""}`}
                     >
-                      {local.yearsOfExperience || "Add experience level…"}
+                      {local.yearsOfExperience || "Add experience level..."}
                     </span>
                   </motion.div>
                 )}
@@ -1003,7 +1003,7 @@ export default function Profile() {
             fieldKey="summary"
             value={local.summary}
             multiline
-            placeholder="Write a concise professional summary that highlights your key skills, experience, and goals…"
+            placeholder="Write a concise professional summary that highlights your key skills, experience, and goals..."
             onSave={(v) => save((p) => ({ ...p, summary: v }))}
           />
         </motion.section>
@@ -1148,7 +1148,7 @@ export default function Profile() {
                 <input
                   className="profile_input profile_add-skill-input"
                   type="text"
-                  placeholder="Type a skill and press Enter…"
+                  placeholder="Type a skill and press Enter..."
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                   onKeyDown={(e) => {

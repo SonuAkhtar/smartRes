@@ -49,7 +49,6 @@ export default function PrivacyPolicy() {
           </div>
         </motion.div>
 
-        {/* Table of contents */}
         <motion.div
           variants={fadeUpVariants}
           initial="hidden"
@@ -87,7 +86,6 @@ export default function PrivacyPolicy() {
             </p>
           </div>
 
-          {/* 1 */}
           <section id="information-we-collect" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">1</span>
@@ -142,7 +140,6 @@ export default function PrivacyPolicy() {
             </ul>
           </section>
 
-          {/* 2 */}
           <section id="how-we-use" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">2</span>
@@ -178,7 +175,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 3 */}
           <section id="ai-processing" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">3</span>
@@ -228,7 +224,6 @@ export default function PrivacyPolicy() {
             </ul>
           </section>
 
-          {/* 4 */}
           <section id="data-storage" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">4</span>
@@ -260,7 +255,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 5 */}
           <section id="your-rights" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">5</span>
@@ -301,7 +295,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 6 */}
           <section id="cookies" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">6</span>
@@ -320,7 +313,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 7 */}
           <section id="data-retention" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">7</span>
@@ -339,7 +331,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 8 */}
           <section id="childrens-privacy" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">8</span>
@@ -354,7 +345,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 9 */}
           <section id="changes" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">9</span>
@@ -373,7 +363,6 @@ export default function PrivacyPolicy() {
             </p>
           </section>
 
-          {/* 10 */}
           <section id="contact" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">10</span>
@@ -394,7 +383,6 @@ export default function PrivacyPolicy() {
           </section>
         </motion.div>
 
-        {/* Footer nav between legal pages */}
         <div className="legal_footer-nav">
           <span className="legal_footer-copy">
             © 2026 SmartRes. All rights reserved.

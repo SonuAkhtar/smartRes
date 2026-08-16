@@ -74,7 +74,7 @@ export default function AuthConfirm() {
             <span>Email resent ✓</span>
           ) : (
             <button onClick={handleResend} disabled={resendLoading}>
-              {resendLoading ? 'Sending…' : 'Resend email'}
+              {resendLoading ? 'Sending...' : 'Resend email'}
             </button>
           )}
         </p>

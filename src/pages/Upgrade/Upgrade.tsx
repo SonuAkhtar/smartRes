@@ -37,7 +37,6 @@ export default function Upgrade() {
     <div className="upgrade">
       <div className="upgrade_bg" aria-hidden="true" />
       <div className="upgrade_container">
-        {/* Header */}
         <motion.div
           className="upgrade_header"
           variants={fadeUpVariants}
@@ -53,7 +52,6 @@ export default function Upgrade() {
           </p>
         </motion.div>
 
-        {/* Pricing card */}
         <motion.div
           className="upgrade_card"
           variants={fadeUpVariants}
@@ -116,7 +114,6 @@ export default function Upgrade() {
           </p>
         </motion.div>
 
-        {/* Comparison table */}
         <motion.div
           className="upgrade_comparison"
           variants={fadeUpVariants}
@@ -178,7 +175,6 @@ export default function Upgrade() {
           </div>
         </motion.div>
 
-        {/* FAQ */}
         <motion.div
           className="upgrade_faq"
           variants={fadeUpVariants}
@@ -227,7 +223,6 @@ export default function Upgrade() {
           </div>
         </motion.div>
 
-        {/* Back link */}
         <div className="upgrade_back">
           <button className="upgrade_back-btn" onClick={() => navigate(-1)}>
             ← Back

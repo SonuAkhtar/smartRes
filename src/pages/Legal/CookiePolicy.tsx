@@ -78,7 +78,6 @@ export default function CookiePolicy() {
           </div>
         </motion.div>
 
-        {/* Table of contents */}
         <motion.div
           variants={fadeUpVariants}
           initial="hidden"
@@ -116,7 +115,6 @@ export default function CookiePolicy() {
             </p>
           </div>
 
-          {/* 1 */}
           <section id="what-are-cookies" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">1</span>
@@ -137,7 +135,6 @@ export default function CookiePolicy() {
             </p>
           </section>
 
-          {/* 2 */}
           <section id="types-we-use" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">2</span>
@@ -181,7 +178,6 @@ export default function CookiePolicy() {
             </ul>
           </section>
 
-          {/* 3 */}
           <section id="local-storage" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">3</span>
@@ -219,7 +215,6 @@ export default function CookiePolicy() {
             </p>
           </section>
 
-          {/* 4 */}
           <section id="third-party" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">4</span>
@@ -252,7 +247,6 @@ export default function CookiePolicy() {
             </p>
           </section>
 
-          {/* 5 */}
           <section id="your-choices" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">5</span>
@@ -295,7 +289,6 @@ export default function CookiePolicy() {
             </div>
           </section>
 
-          {/* 6 */}
           <section id="changes" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">6</span>
@@ -310,7 +303,6 @@ export default function CookiePolicy() {
             </p>
           </section>
 
-          {/* 7 */}
           <section id="contact" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">7</span>
@@ -328,7 +320,6 @@ export default function CookiePolicy() {
           </section>
         </motion.div>
 
-        {/* Footer nav between legal pages */}
         <div className="legal_footer-nav">
           <span className="legal_footer-copy">
             © 2026 SmartRes. All rights reserved.

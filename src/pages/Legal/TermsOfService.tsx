@@ -50,7 +50,6 @@ export default function TermsOfService() {
           </div>
         </motion.div>
 
-        {/* Table of contents */}
         <motion.div
           variants={fadeUpVariants}
           initial="hidden"
@@ -88,7 +87,6 @@ export default function TermsOfService() {
             </p>
           </div>
 
-          {/* 1 */}
           <section id="acceptance" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">1</span>
@@ -110,7 +108,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 2 */}
           <section id="description" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">2</span>
@@ -135,7 +132,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 3 */}
           <section id="accounts" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">3</span>
@@ -169,7 +165,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 4 */}
           <section id="acceptable-use" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">4</span>
@@ -211,7 +206,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 5 */}
           <section id="ai-features" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">5</span>
@@ -248,7 +242,6 @@ export default function TermsOfService() {
             </ul>
           </section>
 
-          {/* 6 */}
           <section id="subscription" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">6</span>
@@ -288,7 +281,6 @@ export default function TermsOfService() {
             </ul>
           </section>
 
-          {/* 7 */}
           <section id="intellectual-property" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">7</span>
@@ -316,7 +308,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 8 */}
           <section id="disclaimers" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">8</span>
@@ -358,7 +349,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 9 */}
           <section id="termination" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">9</span>
@@ -380,7 +370,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 10 */}
           <section id="governing-law" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">10</span>
@@ -398,7 +387,6 @@ export default function TermsOfService() {
             </p>
           </section>
 
-          {/* 11 */}
           <section id="contact" className="legal_section">
             <h2 className="legal_section-title">
               <span className="legal_section-num">11</span>
@@ -416,7 +404,6 @@ export default function TermsOfService() {
           </section>
         </motion.div>
 
-        {/* Footer nav between legal pages */}
         <div className="legal_footer-nav">
           <span className="legal_footer-copy">
             © 2026 SmartRes. All rights reserved.

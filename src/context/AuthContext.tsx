@@ -109,7 +109,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true }
   }
 
-  // Requires Google OAuth provider enabled in Supabase Auth settings
   const loginWithGoogle = async (): Promise<LoginResult> => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -119,7 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true }
   }
 
-  // Requires SMS provider (e.g. Twilio) enabled in Supabase Auth > Providers > Phone
   const sendPhoneOtp = async (phone: string): Promise<LoginResult> => {
     try {
       const { error } = await supabase.auth.signInWithOtp({ phone })

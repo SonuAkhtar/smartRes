@@ -1,36 +1,56 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo, useEffect, Fragment } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import Badge from "../../components/Badge/Badge";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Search,
+  MoreVertical,
+  Briefcase,
+} from "lucide-react";
 import EmptyState from "../../components/EmptyState/EmptyState";
+import Modal from "../../components/Modal/Modal";
 import { useAuth } from "../../context/AuthContext";
 import { useResume } from "../../context/ResumeContext";
 import { useToast } from "../../context/ToastContext";
 import { saveApplication, removeApplication } from "../../lib/db";
-import { EASE_SPRING, DURATION } from "../../lib/motion";
-import type { JobApplication, ApplicationStatus, StatusEvent } from "../../types";
+import type {
+  JobApplication,
+  ApplicationStatus,
+  StatusEvent,
+} from "../../types";
 import "./Applications.css";
-
-function getHistory(app: JobApplication): StatusEvent[] {
-  return app.statusHistory ?? [{ status: app.status, date: app.createdAt }];
-}
 
 const STATUS_CONFIG: Record<
   ApplicationStatus,
-  {
-    label: string;
-    variant: "muted" | "primary" | "warning" | "success" | "error";
-    order: number;
-  }
+  { label: string; order: number }
 > = {
-  saved: { label: "Saved", variant: "muted", order: 0 },
-  applied: { label: "Applied", variant: "primary", order: 1 },
-  interview: { label: "Interview", variant: "warning", order: 2 },
-  offer: { label: "Offer", variant: "success", order: 3 },
-  rejected: { label: "Rejected", variant: "error", order: 4 },
+  saved: { label: "Saved", order: 0 },
+  applied: { label: "Applied", order: 1 },
+  interview: { label: "Interview", order: 2 },
+  offer: { label: "Offer", order: 3 },
+  rejected: { label: "Rejected", order: 4 },
 };
 
 const ALL_STATUSES = Object.keys(STATUS_CONFIG) as ApplicationStatus[];
+const PAGE_SIZE = 8;
+
+const NAVY = "#303c6c";
+const ORANGE = "#b3542d";
+const RED = "#c0392b";
+
+type SortKey = "company" | "role" | "location" | "status" | "updatedAt";
+type SortDir = "asc" | "desc";
+type StatusModalMode = "add" | "edit" | "deleteRow" | null;
+type AppModalState =
+  | { type: "add" }
+  | { type: "edit"; id: string }
+  | { type: "delete"; id: string }
+  | null;
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -40,266 +60,343 @@ function formatDate(iso: string) {
   });
 }
 
-function AppCard({
-  app,
-  index,
-  onStatusChange,
-  onStatusDateChange,
-  onNotesChange,
+function getHistory(app: JobApplication): StatusEvent[] {
+  return app.statusHistory ?? [{ status: app.status, date: app.createdAt }];
+}
+
+function finalEvent(history: StatusEvent[]): StatusEvent | null {
+  if (!history.length) return null;
+  return history.reduce((best, e) => {
+    const bt = new Date(best.date).getTime();
+    const et = new Date(e.date).getTime();
+    if (et > bt) return e;
+    if (
+      et === bt &&
+      STATUS_CONFIG[e.status].order > STATUS_CONFIG[best.status].order
+    )
+      return e;
+    return best;
+  });
+}
+
+function finalStatus(history: StatusEvent[]): ApplicationStatus {
+  return finalEvent(history)?.status ?? "saved";
+}
+
+function RowActions({
+  onEdit,
   onDelete,
 }: {
-  app: JobApplication;
-  index: number;
-  onStatusChange: (status: ApplicationStatus) => void;
-  onStatusDateChange: (eventIndex: number, date: string) => void;
-  onNotesChange: (notes: string) => void;
+  onEdit: () => void;
   onDelete: () => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [editingNotes, setEditingNotes] = useState(false);
-  const [notesValue, setNotesValue] = useState(app.notes);
-  const cfg = STATUS_CONFIG[app.status];
-  const history = getHistory(app);
-  const today = new Date().toISOString().slice(0, 10);
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleNotesSave = () => {
-    onNotesChange(notesValue);
-    setEditingNotes(false);
+  useEffect(() => {
+    if (!open) return;
+    const closeAll = () => setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("click", closeAll);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", closeAll, true);
+    window.addEventListener("resize", closeAll);
+    return () => {
+      document.removeEventListener("click", closeAll);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", closeAll, true);
+      window.removeEventListener("resize", closeAll);
+    };
+  }, [open]);
+
+  const toggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 6, left: r.right - 160 });
+    }
+    setOpen((o) => !o);
   };
 
   return (
-    <motion.div
-      className={`app-card app-card-${app.status}`}
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12, scale: 0.97 }}
-      transition={{
-        duration: DURATION.slow,
-        delay: index * 0.05,
-        ease: EASE_SPRING,
-      }}
-      layout
-    >
-      <div className={`app-card-accent app-card-accent-${app.status}`} />
-
-      <div className="app-card-body">
-        <div className="app-card-main">
-          <div className="app-card-info">
-            <div className="app-card-top">
-              <div>
-                <h3 className="app-card-company">
-                  {app.company || "Unknown Company"}
-                </h3>
-                <p className="app-card-role">
-                  {app.role || "Role not specified"}
-                </p>
-              </div>
-              <div className="app-card-meta-right">
-                {app.matchScore !== undefined && (
-                  <span className="app-card-score">
-                    {app.matchScore}% match
-                  </span>
-                )}
-                <span className="app-card-date">
-                  {formatDate(app.createdAt)}
-                </span>
-              </div>
-            </div>
-
-            <div className="app-card-status-row">
-              <div
-                className="app-card-status-steps"
-                style={
-                  {
-                    "--progress": `${(STATUS_CONFIG[app.status].order / 4) * 100}%`,
-                  } as React.CSSProperties
-                }
-              >
-                {ALL_STATUSES.map((s) => (
-                  <button
-                    key={s}
-                    className={`app-status-step ${app.status === s ? "app-status-step-active" : ""} ${STATUS_CONFIG[s].order < STATUS_CONFIG[app.status].order ? "app-status-step-done" : ""}`}
-                    onClick={() => onStatusChange(s)}
-                    title={`Mark as ${STATUS_CONFIG[s].label}`}
-                    aria-label={`Mark as ${STATUS_CONFIG[s].label}`}
-                    aria-pressed={app.status === s}
-                  >
-                    <span className="app-status-step-dot" />
-                    <span className="app-status-step-label">
-                      {STATUS_CONFIG[s].label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-              <Badge variant={cfg.variant}>{cfg.label}</Badge>
-            </div>
-          </div>
-        </div>
-
-        <AnimatePresence initial={false}>
-          {expanded && (
-            <motion.div
-              className="app-card-expanded"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{
-                opacity: 1,
-                height: "auto",
-                transition: { duration: 0.3, ease: EASE_SPRING },
-              }}
-              exit={{ opacity: 0, height: 0, transition: { duration: 0.18 } }}
-            >
-              <div className="app-card-expanded-inner">
-                <div className="app-card-section">
-                  <div className="app-card-section-title">Status History</div>
-                  <div className="app-history">
-                    {history.map((ev, i) => (
-                      <div className="app-history-row" key={`${ev.status}-${i}`}>
-                        <span
-                          className={`app-history-dot app-history-dot-${ev.status}`}
-                          aria-hidden="true"
-                        />
-                        <span className="app-history-label">
-                          {STATUS_CONFIG[ev.status].label}
-                        </span>
-                        <input
-                          type="date"
-                          className="app-history-date"
-                          value={ev.date.slice(0, 10)}
-                          max={today}
-                          onChange={(e) => onStatusDateChange(i, e.target.value)}
-                          aria-label={`Date ${STATUS_CONFIG[ev.status].label}`}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {app.jdSnippet && (
-                  <div className="app-card-section">
-                    <div className="app-card-section-title">
-                      Job Description Snippet
-                    </div>
-                    <p className="app-card-snippet">{app.jdSnippet}</p>
-                  </div>
-                )}
-
-                <div className="app-card-section">
-                  <div className="app-card-section-title">
-                    Notes
-                    {!editingNotes && (
-                      <button
-                        className="app-notes-edit-btn"
-                        onClick={() => setEditingNotes(true)}
-                      >
-                        Edit
-                      </button>
-                    )}
-                  </div>
-                  {editingNotes ? (
-                    <div className="app-notes-edit">
-                      <textarea
-                        className="app-notes-textarea"
-                        value={notesValue}
-                        onChange={(e) => setNotesValue(e.target.value)}
-                        placeholder="Add notes about this application, contacts, next steps…"
-                        rows={4}
-                        autoFocus
-                      />
-                      <div className="app-notes-actions">
-                        <button
-                          className="app-notes-save-btn"
-                          onClick={handleNotesSave}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="app-notes-cancel-btn"
-                          onClick={() => {
-                            setNotesValue(app.notes);
-                            setEditingNotes(false);
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="app-notes-text">
-                      {app.notes || (
-                        <span className="app-notes-empty">
-                          No notes yet - click Edit to add some.
-                        </span>
-                      )}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="app-card-actions">
-          <button
-            className="app-toggle-btn"
-            onClick={() => setExpanded((v) => !v)}
+    <>
+      <button
+        ref={btnRef}
+        className="applications_kebab"
+        onClick={toggle}
+        aria-label="Row actions"
+        aria-haspopup="menu"
+      >
+        <MoreVertical size={18} />
+      </button>
+      {open &&
+        createPortal(
+          <div
+            className="applications_menu"
+            style={{ top: pos.top, left: pos.left }}
+            role="menu"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.22 }}
-              style={{ width: 13, height: 13 }}
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </motion.svg>
-            {expanded ? "Hide" : "Notes & Details"}
-          </button>
-
-          {confirmDelete ? (
-            <div className="app-delete-confirm">
-              <span>Remove this application?</span>
-              <button className="app-confirm-yes" onClick={onDelete}>
-                Yes, delete
-              </button>
-              <button
-                className="app-confirm-no"
-                onClick={() => setConfirmDelete(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
             <button
-              className="app-delete-btn"
-              onClick={() => setConfirmDelete(true)}
+              className="applications_menu-item"
+              onClick={() => {
+                setOpen(false);
+                onEdit();
+              }}
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ width: 13, height: 13 }}
-              >
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-              </svg>
+              <Pencil size={15} />
+              Edit
+            </button>
+            <button
+              className="applications_menu-item applications_menu-item-danger"
+              onClick={() => {
+                setOpen(false);
+                onDelete();
+              }}
+            >
+              <Trash2 size={15} />
               Delete
             </button>
-          )}
-        </div>
-      </div>
-    </motion.div>
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
 
-type ViewMode = "list" | "kanban";
+function NestedDetails({
+  app,
+  onChange,
+}: {
+  app: JobApplication;
+  onChange: (history: StatusEvent[]) => void;
+}) {
+  const history = getHistory(app);
+  const today = new Date().toISOString().slice(0, 10);
+
+  const [mode, setMode] = useState<StatusModalMode>(null);
+  const [targetIndex, setTargetIndex] = useState<number | null>(null);
+  const [formStatus, setFormStatus] = useState<ApplicationStatus>("saved");
+  const [formDate, setFormDate] = useState(today);
+  const [formNote, setFormNote] = useState("");
+
+  const close = () => {
+    setMode(null);
+    setTargetIndex(null);
+  };
+
+  const openAdd = () => {
+    const used = new Set(history.map((e) => e.status));
+    const next = ALL_STATUSES.find((s) => !used.has(s)) ?? "applied";
+    setFormStatus(next);
+    setFormDate(today);
+    setFormNote("");
+    setTargetIndex(null);
+    setMode("add");
+  };
+
+  const openEdit = (i: number) => {
+    const ev = history[i];
+    setFormStatus(ev.status);
+    setFormDate(ev.date.slice(0, 10));
+    setFormNote(ev.note ?? "");
+    setTargetIndex(i);
+    setMode("edit");
+  };
+
+  const submitForm = () => {
+    const iso = formDate
+      ? new Date(`${formDate}T00:00:00`).toISOString()
+      : new Date().toISOString();
+    const ev: StatusEvent = {
+      status: formStatus,
+      date: iso,
+      note: formNote.trim() || undefined,
+    };
+    if (mode === "add") {
+      onChange([...history, ev]);
+    } else if (mode === "edit" && targetIndex !== null) {
+      onChange(history.map((e, i) => (i === targetIndex ? ev : e)));
+    }
+    close();
+  };
+
+  const confirmDeleteRow = () => {
+    if (targetIndex !== null && history.length > 1) {
+      onChange(history.filter((_, i) => i !== targetIndex));
+    }
+    close();
+  };
+
+  const formOpen = mode === "add" || mode === "edit";
+
+  return (
+    <div className="applications_nested">
+      <div className="applications_nested-head">
+        <span className="applications_nested-title">Status Timeline</span>
+        <button className="applications_timeline-add" onClick={openAdd}>
+          <Plus size={14} strokeWidth={2.5} />
+          Add status
+        </button>
+      </div>
+
+      <div className="applications_timeline-wrap">
+        <table className="applications_timeline">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Note</th>
+              <th className="applications_timeline-actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((ev, i) => (
+              <tr key={i}>
+                <td data-label="Status">
+                  <span
+                    className={`applications_status-tag applications_status-${ev.status}`}
+                  >
+                    <span className="applications_status-dot" aria-hidden="true" />
+                    {STATUS_CONFIG[ev.status].label}
+                  </span>
+                </td>
+                <td data-label="Date">{formatDate(ev.date)}</td>
+                <td data-label="Note">
+                  {ev.note ? (
+                    <span>{ev.note}</span>
+                  ) : (
+                    <span className="applications_note-empty">-</span>
+                  )}
+                </td>
+                <td data-label="Actions">
+                  <div className="applications_timeline-actions">
+                    <button
+                      className="applications_icon-btn"
+                      onClick={() => openEdit(i)}
+                      aria-label="Edit status"
+                    >
+                      <Pencil size={14} />
+                    </button>
+                    <button
+                      className="applications_icon-btn applications_icon-btn-danger"
+                      onClick={() => {
+                        setTargetIndex(i);
+                        setMode("deleteRow");
+                      }}
+                      disabled={history.length <= 1}
+                      aria-label="Delete status"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <Modal
+        open={formOpen}
+        title={mode === "edit" ? "Edit Status" : "Add Status"}
+        icon={
+          mode === "edit" ? (
+            <Pencil size={18} color={NAVY} />
+          ) : (
+            <Plus size={18} color={NAVY} />
+          )
+        }
+        onClose={close}
+        footer={
+          <>
+            <button className="modal_btn modal_btn-cancel" onClick={close}>
+              Cancel
+            </button>
+            <button className="modal_btn modal_btn-primary" onClick={submitForm}>
+              {mode === "edit" ? "Save" : "Add"}
+            </button>
+          </>
+        }
+      >
+        <div className="applications_modal-form">
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Status</span>
+            <select
+              className="applications_modal-input"
+              value={formStatus}
+              onChange={(e) =>
+                setFormStatus(e.target.value as ApplicationStatus)
+              }
+            >
+              {ALL_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {STATUS_CONFIG[s].label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Date</span>
+            <input
+              type="date"
+              className="applications_modal-input"
+              value={formDate}
+              max={today}
+              onChange={(e) => setFormDate(e.target.value)}
+            />
+          </label>
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Note</span>
+            <textarea
+              className="applications_modal-input"
+              rows={3}
+              value={formNote}
+              onChange={(e) => setFormNote(e.target.value)}
+              placeholder="Optional note"
+            />
+          </label>
+        </div>
+      </Modal>
+
+      <Modal
+        open={mode === "deleteRow"}
+        title="Delete status"
+        icon={<Trash2 size={18} color={RED} />}
+        tone="danger"
+        onClose={close}
+        footer={
+          <>
+            <button className="modal_btn modal_btn-cancel" onClick={close}>
+              Cancel
+            </button>
+            <button
+              className="modal_btn modal_btn-danger"
+              onClick={confirmDeleteRow}
+            >
+              Delete
+            </button>
+          </>
+        }
+      >
+        {targetIndex !== null && (
+          <div className="applications_modal-confirm">
+            <p className="applications_modal-confirm-lead">
+              Remove the "{STATUS_CONFIG[history[targetIndex].status].label}"
+              status?
+            </p>
+            <p className="applications_modal-confirm-sub">
+              This entry will be removed from the timeline.
+            </p>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
+}
 
 export default function Applications() {
   const { user } = useAuth();
@@ -311,99 +408,146 @@ export default function Applications() {
     new Map(),
   );
 
-  const [filterStatus, setFilterStatus] = useState<ApplicationStatus | "all">(
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "all">(
     "all",
   );
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newCompany, setNewCompany] = useState("");
-  const [newRole, setNewRole] = useState("");
-  const [viewMode, setViewMode] = useState<ViewMode>(() => {
-    const stored = localStorage.getItem("applications_view") as ViewMode | null;
-    return stored === "kanban" ? "kanban" : "list";
-  });
+  const [sortKey, setSortKey] = useState<SortKey>("updatedAt");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [page, setPage] = useState(1);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const filtered =
-    filterStatus === "all"
-      ? applications
-      : applications.filter((a) => a.status === filterStatus);
+  const [appModal, setAppModal] = useState<AppModalState>(null);
+  const [formCompany, setFormCompany] = useState("");
+  const [formRole, setFormRole] = useState("");
+  const [formLocation, setFormLocation] = useState("");
 
   const counts = ALL_STATUSES.reduce<Record<string, number>>((acc, s) => {
     acc[s] = applications.filter((a) => a.status === s).length;
     return acc;
   }, {});
 
-  const handleAdd = () => {
-    if (!newCompany.trim() && !newRole.trim()) return;
-    const now = new Date().toISOString();
-    const app: JobApplication = {
-      id: Date.now().toString(),
-      company: newCompany.trim(),
-      role: newRole.trim(),
-      jdSnippet: "",
-      status: "saved",
-      notes: "",
-      statusHistory: [{ status: "saved", date: now }],
-      createdAt: now,
-      updatedAt: now,
+  const mainNote = (app: JobApplication) =>
+    finalEvent(getHistory(app))?.note || app.notes || "";
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return applications.filter((a) => {
+      if (statusFilter !== "all" && a.status !== statusFilter) return false;
+      if (!q) return true;
+      const eventNotes = getHistory(a)
+        .map((e) => e.note ?? "")
+        .join(" ");
+      return [a.company, a.role, a.location ?? "", a.notes, eventNotes].some(
+        (v) => v.toLowerCase().includes(q),
+      );
+    });
+  }, [applications, search, statusFilter]);
+
+  const sorted = useMemo(() => {
+    const val = (a: JobApplication): string | number => {
+      switch (sortKey) {
+        case "status":
+          return STATUS_CONFIG[a.status].order;
+        case "updatedAt":
+          return new Date(a.updatedAt).getTime();
+        case "company":
+          return a.company.toLowerCase();
+        case "role":
+          return a.role.toLowerCase();
+        case "location":
+          return (a.location ?? "").toLowerCase();
+      }
     };
-    addApplication(app);
-    if (user) saveApplication(user.id, app);
-    setNewCompany("");
-    setNewRole("");
-    setShowAddForm(false);
+    return [...filtered].sort((a, b) => {
+      const av = val(a);
+      const bv = val(b);
+      if (av < bv) return sortDir === "asc" ? -1 : 1;
+      if (av > bv) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filtered, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paged = sorted.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir(key === "updatedAt" ? "desc" : "asc");
+    }
+    setPage(1);
   };
 
-  const handleStatusChange = (id: string, status: ApplicationStatus) => {
-    const app = applications.find((a) => a.id === id);
-    if (!app || app.status === status) return;
-    const now = new Date().toISOString();
-    const base = getHistory(app);
-    const order = STATUS_CONFIG[status].order;
-    const existing = base.find((ev) => ev.status === status);
-    const statusHistory = [
-      ...base.filter((ev) => STATUS_CONFIG[ev.status].order < order),
-      { status, date: existing ? existing.date : now },
-    ];
-    updateApplication(id, { status, statusHistory });
-    if (user)
-      saveApplication(user.id, {
-        ...app,
-        status,
-        statusHistory,
+  const openAddApp = () => {
+    setFormCompany("");
+    setFormRole("");
+    setFormLocation("");
+    setAppModal({ type: "add" });
+  };
+
+  const openEditApp = (app: JobApplication) => {
+    setFormCompany(app.company);
+    setFormRole(app.role);
+    setFormLocation(app.location ?? "");
+    setAppModal({ type: "edit", id: app.id });
+  };
+
+  const submitApp = () => {
+    if (!appModal) return;
+    const company = formCompany.trim();
+    const role = formRole.trim();
+    const location = formLocation.trim();
+    if (appModal.type === "add") {
+      if (!company && !role) return;
+      const now = new Date().toISOString();
+      const app: JobApplication = {
+        id: Date.now().toString(),
+        company,
+        role,
+        location,
+        jdSnippet: "",
+        status: "saved",
+        notes: "",
+        statusHistory: [{ status: "saved", date: now }],
+        createdAt: now,
         updatedAt: now,
-      });
+      };
+      addApplication(app);
+      if (user) saveApplication(user.id, app);
+    } else if (appModal.type === "edit") {
+      const app = applications.find((a) => a.id === appModal.id);
+      if (!app) return;
+      const patch = { company, role, location };
+      updateApplication(appModal.id, patch);
+      if (user)
+        saveApplication(user.id, {
+          ...app,
+          ...patch,
+          updatedAt: new Date().toISOString(),
+        });
+    }
+    setAppModal(null);
   };
 
-  const handleStatusDateChange = (
-    id: string,
-    eventIndex: number,
-    date: string,
-  ) => {
+  const handleHistoryChange = (id: string, statusHistory: StatusEvent[]) => {
     const app = applications.find((a) => a.id === id);
     if (!app) return;
-    const iso = date
-      ? new Date(`${date}T00:00:00`).toISOString()
-      : new Date().toISOString();
-    const statusHistory = getHistory(app).map((ev, i) =>
-      i === eventIndex ? { ...ev, date: iso } : ev,
-    );
-    updateApplication(id, { statusHistory });
+    const status = finalStatus(statusHistory);
+    const now = new Date().toISOString();
+    updateApplication(id, { statusHistory, status });
     if (user)
       saveApplication(user.id, {
         ...app,
         statusHistory,
-        updatedAt: new Date().toISOString(),
-      });
-  };
-
-  const handleNotesChange = (id: string, notes: string) => {
-    updateApplication(id, { notes });
-    const updated = applications.find((a) => a.id === id);
-    if (user && updated)
-      saveApplication(user.id, {
-        ...updated,
-        notes,
-        updatedAt: new Date().toISOString(),
+        status,
+        updatedAt: now,
       });
   };
 
@@ -411,6 +555,7 @@ export default function Applications() {
     const deleted = applications.find((a) => a.id === id);
     if (!deleted) return;
     deleteApplication(id);
+    setExpandedId((cur) => (cur === id ? null : cur));
     const timer = setTimeout(() => {
       if (user) removeApplication(id);
       deleteTimers.current.delete(id);
@@ -426,16 +571,37 @@ export default function Applications() {
     });
   };
 
+  const sortIcon = (k: SortKey) => {
+    if (sortKey !== k)
+      return (
+        <ChevronsUpDown className="applications_sort-ico" size={12} aria-hidden="true" />
+      );
+    return sortDir === "asc" ? (
+      <ChevronUp className="applications_sort-ico is-active" size={12} aria-hidden="true" />
+    ) : (
+      <ChevronDown className="applications_sort-ico is-active" size={12} aria-hidden="true" />
+    );
+  };
+
+  const th = (label: string, k: SortKey) => (
+    <th>
+      <button className="applications_th-btn" onClick={() => toggleSort(k)}>
+        {label}
+        {sortIcon(k)}
+      </button>
+    </th>
+  );
+
+  const deleteTarget =
+    appModal?.type === "delete"
+      ? applications.find((a) => a.id === appModal.id)
+      : null;
+
   return (
     <div className="applications">
       <div className="applications_bg" />
       <div className="applications_container">
-        <motion.div
-          className="applications_header"
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
+        <div className="applications_header">
           <div>
             <h1 className="applications_title">Application Tracker</h1>
             <p className="applications_subtitle">
@@ -444,87 +610,14 @@ export default function Applications() {
                 : "Track every job you apply to"}
             </p>
           </div>
-          <div className="applications_header-actions">
-            {applications.length > 0 && (
-              <div
-                className="applications_view-toggle"
-                role="group"
-                aria-label="View mode"
-              >
-                <button
-                  className={`applications_view-btn ${viewMode === "list" ? "applications_view-btn-active" : ""}`}
-                  onClick={() => {
-                    setViewMode("list");
-                    localStorage.setItem("applications_view", "list");
-                  }}
-                  aria-label="List view"
-                  title="List view"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    style={{ width: 14, height: 14 }}
-                  >
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                  </svg>
-                </button>
-                <button
-                  className={`applications_view-btn ${viewMode === "kanban" ? "applications_view-btn-active" : ""}`}
-                  onClick={() => {
-                    setViewMode("kanban");
-                    localStorage.setItem("applications_view", "kanban");
-                  }}
-                  aria-label="Kanban view"
-                  title="Kanban view"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    style={{ width: 14, height: 14 }}
-                  >
-                    <rect x="3" y="3" width="5" height="18" rx="1" />
-                    <rect x="10" y="3" width="5" height="18" rx="1" />
-                    <rect x="17" y="3" width="4" height="18" rx="1" />
-                  </svg>
-                </button>
-              </div>
-            )}
-            <button
-              className="applications_add-btn"
-              onClick={() => setShowAddForm((v) => !v)}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                style={{ width: 14, height: 14 }}
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Add Application
-            </button>
-          </div>
-        </motion.div>
+          <button className="applications_add-btn" onClick={openAddApp}>
+            <Plus size={16} strokeWidth={2.5} />
+            Add Application
+          </button>
+        </div>
 
-        {/* Summary stats */}
         {applications.length > 0 && (
-          <motion.div
-            className="applications_stats"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
-          >
+          <div className="applications_stats">
             {ALL_STATUSES.map((s) => (
               <div
                 key={s}
@@ -536,285 +629,302 @@ export default function Applications() {
                 </span>
               </div>
             ))}
-          </motion.div>
-        )}
-
-        {/* Add form */}
-        <AnimatePresence>
-          {showAddForm && (
-            <motion.div
-              className="applications_add-form"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.28, ease: EASE_SPRING }}
-            >
-              <div className="applications_add-form-inner">
-                <input
-                  className="applications_input"
-                  type="text"
-                  placeholder="Company name"
-                  value={newCompany}
-                  onChange={(e) => setNewCompany(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                  autoFocus
-                />
-                <input
-                  className="applications_input"
-                  type="text"
-                  placeholder="Role / Job title"
-                  value={newRole}
-                  onChange={(e) => setNewRole(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                />
-                <div className="applications_add-form-actions">
-                  <button
-                    className="applications_add-confirm-btn"
-                    onClick={handleAdd}
-                    disabled={!newCompany.trim() && !newRole.trim()}
-                  >
-                    Add
-                  </button>
-                  <button
-                    className="applications_add-cancel-btn"
-                    onClick={() => setShowAddForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Filter tabs */}
-        {applications.length > 0 && (
-          <div className="applications_filters">
-            <button
-              className={`applications_filter-btn ${filterStatus === "all" ? "applications_filter-btn-active" : ""}`}
-              onClick={() => setFilterStatus("all")}
-            >
-              All{" "}
-              <span className="applications_filter-count">
-                {applications.length}
-              </span>
-            </button>
-            {ALL_STATUSES.map(
-              (s) =>
-                counts[s] > 0 && (
-                  <button
-                    key={s}
-                    className={`applications_filter-btn applications_filter-btn-${s} ${filterStatus === s ? "applications_filter-btn-active" : ""}`}
-                    onClick={() => setFilterStatus(s)}
-                  >
-                    {STATUS_CONFIG[s].label}
-                    <span className="applications_filter-count">
-                      {counts[s]}
-                    </span>
-                  </button>
-                ),
-            )}
           </div>
         )}
 
-        {/* Kanban board */}
-        {viewMode === "kanban" && applications.length > 0 && (
-          <div className="applications_kanban">
-            {ALL_STATUSES.map((s) => {
-              const colApps = applications.filter((a) => a.status === s);
-              return (
-                <div
-                  key={s}
-                  className={`applications_kanban-col applications_kanban-col-${s}`}
+        {applications.length === 0 ? (
+          <EmptyState
+            className="applications_empty"
+            icon={
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+                <rect x="8" y="12" width="44" height="38" rx="4" stroke="var(--color-border)" strokeWidth="2" />
+                <path d="M20 12V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4" stroke="var(--color-border)" strokeWidth="2" />
+                <path d="M20 28h20M20 35h12" stroke="var(--color-border-dark)" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="47" cy="47" r="10" fill="var(--color-surface-raised)" stroke="var(--color-border)" strokeWidth="2" />
+                <path d="M43 47h8M47 43v8" stroke="var(--color-primary)" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            }
+            title="No applications yet"
+            description="Add applications manually or track them directly from your Job Match History."
+            cta={{
+              label: "Add Your First Application",
+              onClick: openAddApp,
+              className: "applications_add-btn applications_add-btn-lg",
+            }}
+            secondaryCta={{
+              label: "View Job History",
+              onClick: () => navigate("/job-history"),
+              className: "applications_secondary-btn",
+            }}
+          />
+        ) : (
+          <>
+            <div className="applications_panel">
+              <div className="applications_toolbar">
+                <div className="applications_search">
+                  <Search size={16} aria-hidden="true" />
+                  <input
+                    type="text"
+                    placeholder="Search company, role, location, notes"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                  />
+                </div>
+                <select
+                  className="applications_filter-select"
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value as ApplicationStatus | "all");
+                    setPage(1);
+                  }}
+                  aria-label="Filter by status"
                 >
-                  <div className="applications_kanban-col-header">
-                    <span className="applications_kanban-col-label">
-                      {STATUS_CONFIG[s].label}
-                    </span>
-                    <span className="applications_kanban-col-count">
-                      {colApps.length}
-                    </span>
-                  </div>
-                  <div className="applications_kanban-cards">
-                    <AnimatePresence>
-                      {colApps.map((app) => (
-                        <motion.div
-                          key={app.id}
-                          className={`applications_kanban-card applications_kanban-card-${s}`}
-                          layout
-                          initial={{ opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          transition={{ duration: 0.22 }}
-                        >
-                          <div className="applications_kanban-card-company">
-                            {app.company || "Unknown Company"}
-                          </div>
-                          <div className="applications_kanban-card-role">
-                            {app.role || "Role not specified"}
-                          </div>
-                          {app.matchScore !== undefined && (
-                            <div className="applications_kanban-card-score">
-                              {app.matchScore}% match
-                            </div>
-                          )}
-                          <div className="applications_kanban-card-actions">
-                            {ALL_STATUSES.filter((ns) => ns !== s)
-                              .slice(0, 2)
-                              .map((ns) => (
-                                <button
-                                  key={ns}
-                                  className="applications_kanban-move-btn"
-                                  onClick={() => handleStatusChange(app.id, ns)}
-                                  title={`Move to ${STATUS_CONFIG[ns].label}`}
-                                  aria-label={`Move to ${STATUS_CONFIG[ns].label}`}
-                                >
-                                  → {STATUS_CONFIG[ns].label}
-                                </button>
-                              ))}
-                            <button
-                              className="applications_kanban-delete-btn"
-                              onClick={() => handleDelete(app.id)}
-                              aria-label="Delete application"
-                            >
-                              <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                style={{ width: 11, height: 11 }}
-                              >
-                                <polyline points="3 6 5 6 21 6" />
-                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                              </svg>
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                    {colApps.length === 0 && (
-                      <div className="applications_kanban-empty">
-                        No applications
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* List */}
-        {(viewMode === "list" || applications.length === 0) && (
-          <AnimatePresence mode="wait">
-            {applications.length === 0 ? (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 32 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45 }}
-              >
-                <EmptyState
-                  className="applications_empty"
-                  icon={
-                    <svg
-                      width="60"
-                      height="60"
-                      viewBox="0 0 60 60"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <rect
-                        x="8"
-                        y="12"
-                        width="44"
-                        height="38"
-                        rx="4"
-                        stroke="var(--color-border)"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M20 12V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4"
-                        stroke="var(--color-border)"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M20 28h20M20 35h12"
-                        stroke="var(--color-border-dark)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <circle
-                        cx="47"
-                        cy="47"
-                        r="10"
-                        fill="var(--color-surface-raised)"
-                        stroke="var(--color-border)"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M43 47h8M47 43v8"
-                        stroke="var(--color-primary)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  }
-                  title="No applications yet"
-                  description="Add applications manually or track them directly from your Job Match History."
-                  cta={{
-                    label: "Add Your First Application",
-                    onClick: () => setShowAddForm(true),
-                    className: "applications_add-btn applications_add-btn-lg",
-                  }}
-                  secondaryCta={{
-                    label: "View Job History →",
-                    onClick: () => navigate("/job-history"),
-                    className: "applications_secondary-btn",
-                  }}
-                />
-              </motion.div>
-            ) : filtered.length === 0 ? (
-              <motion.div
-                key="empty-filter"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="applications_no-results"
-              >
-                No applications with status "
-                {STATUS_CONFIG[filterStatus as ApplicationStatus]?.label}".
-              </motion.div>
-            ) : (
-              <motion.div key="list" className="applications_list">
-                <AnimatePresence>
-                  {filtered.map((app, i) => (
-                    <AppCard
-                      key={app.id}
-                      app={app}
-                      index={i}
-                      onStatusChange={(status) =>
-                        handleStatusChange(app.id, status)
-                      }
-                      onStatusDateChange={(eventIndex, date) =>
-                        handleStatusDateChange(app.id, eventIndex, date)
-                      }
-                      onNotesChange={(notes) =>
-                        handleNotesChange(app.id, notes)
-                      }
-                      onDelete={() => handleDelete(app.id)}
-                    />
+                  <option value="all">All statuses ({applications.length})</option>
+                  {ALL_STATUSES.map((s) => (
+                    <option key={s} value={s}>
+                      {STATUS_CONFIG[s].label} ({counts[s]})
+                    </option>
                   ))}
-                </AnimatePresence>
-              </motion.div>
+                </select>
+              </div>
+
+              {sorted.length === 0 ? (
+                <div className="applications_no-results">
+                  No applications match your search.
+                </div>
+              ) : (
+                <div className="applications_table-wrap">
+                  <table className="applications_table">
+                    <thead>
+                      <tr>
+                        {th("Company", "company")}
+                        {th("Role", "role")}
+                        {th("Location", "location")}
+                        {th("Status", "status")}
+                        <th>Note</th>
+                        {th("Last Updated", "updatedAt")}
+                        <th className="applications_actions-col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paged.map((app) => {
+                        const open = expandedId === app.id;
+                        const note = mainNote(app);
+                        return (
+                          <Fragment key={app.id}>
+                            <tr
+                              className={`applications_row ${open ? "is-open" : ""}`}
+                              onClick={() =>
+                                setExpandedId((cur) =>
+                                  cur === app.id ? null : app.id,
+                                )
+                              }
+                            >
+                              <td data-label="Company" className="applications_cell-company">
+                                {app.company || "Unknown Company"}
+                              </td>
+                              <td data-label="Role" className="applications_cell-role">
+                                {app.role || "-"}
+                              </td>
+                              <td data-label="Location" className="applications_cell-location">
+                                {app.location || "-"}
+                              </td>
+                              <td data-label="Status" className="applications_cell-status">
+                                <span
+                                  className={`applications_status-tag applications_status-${app.status}`}
+                                >
+                                  <span
+                                    className="applications_status-dot"
+                                    aria-hidden="true"
+                                  />
+                                  {STATUS_CONFIG[app.status].label}
+                                </span>
+                              </td>
+                              <td data-label="Note" className="applications_cell-note">
+                                {note ? (
+                                  <span className="applications_note-snippet">
+                                    {note}
+                                  </span>
+                                ) : (
+                                  <span className="applications_note-empty">-</span>
+                                )}
+                              </td>
+                              <td data-label="Last Updated" className="applications_cell-updated">
+                                {formatDate(app.updatedAt)}
+                              </td>
+                              <td
+                                data-label="Actions"
+                                className="applications_cell-actions"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <RowActions
+                                  onEdit={() => openEditApp(app)}
+                                  onDelete={() =>
+                                    setAppModal({ type: "delete", id: app.id })
+                                  }
+                                />
+                              </td>
+                            </tr>
+                            <tr className="applications_nested-row">
+                              <td colSpan={7} className="applications_nested-cell">
+                                <div
+                                  className={`applications_collapsible ${open ? "is-open" : ""}`}
+                                >
+                                  <div className="applications_collapsible-inner">
+                                    <NestedDetails
+                                      app={app}
+                                      onChange={(history) =>
+                                        handleHistoryChange(app.id, history)
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </Fragment>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="applications_pagination">
+                <button
+                  className="applications_page-nav"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    className={`applications_page-btn ${p === currentPage ? "is-active" : ""}`}
+                    onClick={() => setPage(p)}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  className="applications_page-nav"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             )}
-          </AnimatePresence>
+          </>
         )}
       </div>
+
+      <Modal
+        open={appModal?.type === "add" || appModal?.type === "edit"}
+        title={appModal?.type === "edit" ? "Edit Application" : "Add Application"}
+        icon={
+          appModal?.type === "edit" ? (
+            <Pencil size={18} color={NAVY} />
+          ) : (
+            <Briefcase size={18} color={ORANGE} />
+          )
+        }
+        onClose={() => setAppModal(null)}
+        footer={
+          <>
+            <button
+              className="modal_btn modal_btn-cancel"
+              onClick={() => setAppModal(null)}
+            >
+              Cancel
+            </button>
+            <button
+              className={`modal_btn ${appModal?.type === "edit" ? "modal_btn-primary" : "modal_btn-accent"}`}
+              onClick={submitApp}
+            >
+              {appModal?.type === "edit" ? "Save" : "Add"}
+            </button>
+          </>
+        }
+      >
+        <div className="applications_modal-form">
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Company</span>
+            <input
+              className="applications_modal-input"
+              type="text"
+              placeholder="Company name"
+              value={formCompany}
+              onChange={(e) => setFormCompany(e.target.value)}
+              autoFocus
+            />
+          </label>
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Role</span>
+            <input
+              className="applications_modal-input"
+              type="text"
+              placeholder="Role / Job title"
+              value={formRole}
+              onChange={(e) => setFormRole(e.target.value)}
+            />
+          </label>
+          <label className="applications_modal-field">
+            <span className="applications_modal-label">Location</span>
+            <input
+              className="applications_modal-input"
+              type="text"
+              placeholder="Location"
+              value={formLocation}
+              onChange={(e) => setFormLocation(e.target.value)}
+            />
+          </label>
+        </div>
+      </Modal>
+
+      <Modal
+        open={appModal?.type === "delete"}
+        title="Delete application"
+        icon={<Trash2 size={18} color={RED} />}
+        tone="danger"
+        onClose={() => setAppModal(null)}
+        footer={
+          <>
+            <button
+              className="modal_btn modal_btn-cancel"
+              onClick={() => setAppModal(null)}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal_btn modal_btn-danger"
+              onClick={() => {
+                if (appModal?.type === "delete") handleDelete(appModal.id);
+                setAppModal(null);
+              }}
+            >
+              Delete
+            </button>
+          </>
+        }
+      >
+        {deleteTarget && (
+          <div className="applications_modal-confirm">
+            <p className="applications_modal-confirm-lead">
+              Delete "{deleteTarget.company || "this application"}"?
+            </p>
+            <p className="applications_modal-confirm-sub">
+              The application and its full status timeline will be removed. You
+              can undo this right after.
+            </p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

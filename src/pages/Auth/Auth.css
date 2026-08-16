@@ -325,7 +325,6 @@
 }
 
 
-/* Social / alternative login */
 
 .auth_divider {
   display: flex;
@@ -387,7 +386,6 @@
 .auth_social-btn svg { flex-shrink: 0; }
 
 
-/* Phone OTP flow */
 
 .auth_phone-back {
   background: none;
@@ -425,7 +423,6 @@
   font-weight: 600;
 }
 
-/* Country code + number grouped input */
 .auth_phone-group {
   display: flex;
   border: 1px solid rgba(228, 233, 247, 0.14);
@@ -454,7 +451,6 @@
   outline: none;
   appearance: none;
   -webkit-appearance: none;
-  /* chevron arrow */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba%28228%2C233%2C247%2C0.4%29' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
@@ -481,7 +477,6 @@
 
 .auth_phone-input::placeholder { color: rgba(228, 233, 247, 0.25); }
 
-/* Live digit counter */
 .auth_phone-meta {
   display: flex;
   justify-content: flex-end;
@@ -497,7 +492,6 @@
   transition: color var(--transition);
 }
 
-/* OTP input */
 .auth_otp-input {
   text-align: center;
   font-size: 1.5rem;

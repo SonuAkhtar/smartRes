@@ -302,7 +302,7 @@ export default function InterviewPrep() {
                 </label>
                 <textarea
                   className="ip_textarea"
-                  placeholder="Paste the full job description here…"
+                  placeholder="Paste the full job description here..."
                   value={jd}
                   onChange={(e) => setJd(e.target.value)}
                   rows={10}
@@ -321,7 +321,7 @@ export default function InterviewPrep() {
                   placeholder={
                     source === "history" && selectedEntry?.company
                       ? selectedEntry.company
-                      : "e.g. Google, Stripe…"
+                      : "e.g. Google, Stripe..."
                   }
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
@@ -349,7 +349,7 @@ export default function InterviewPrep() {
             >
               {loading ? (
                 <>
-                  <Spinner size="sm" /> Generating questions…
+                  <Spinner size="sm" /> Generating questions...
                 </>
               ) : (
                 <>Generate Interview Questions →</>

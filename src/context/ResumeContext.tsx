@@ -106,6 +106,7 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     } catch {
+      /* storage unavailable or over quota */
     }
   }, [
     profile,
@@ -165,6 +166,7 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
+      /* storage unavailable */
     }
   };
 

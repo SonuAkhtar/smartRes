@@ -134,6 +134,7 @@ export default function Header() {
   const navRef = useRef<HTMLElement>(null);
 
   const isHome = location.pathname === "/";
+  const isAuthPage = location.pathname.startsWith("/auth");
 
   const aiActive = AI_TOOLS.some((l) => location.pathname === l.to);
   const trackActive = TRACKER.some((l) => location.pathname === l.to);
@@ -372,7 +373,7 @@ export default function Header() {
                 )}
               </div>
             </>
-          ) : (
+          ) : isAuthPage ? null : (
             <Link to="/auth" className="header_nav-link header_cta-btn">
               Get Started
             </Link>
@@ -639,17 +640,19 @@ export default function Header() {
           </div>
         )}
 
-        <button
-          className={`header_hamburger ${mobileOpen ? "header_hamburger-open" : ""}`}
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          aria-controls="header-mobile-nav"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        {(user || !isAuthPage) && (
+          <button
+            className={`header_hamburger ${mobileOpen ? "header_hamburger-open" : ""}`}
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="header-mobile-nav"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        )}
       </div>
 
       {mobileOpen && (

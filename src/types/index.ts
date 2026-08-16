@@ -77,6 +77,7 @@ export type ApplicationStatus =
 export interface StatusEvent {
   status: ApplicationStatus;
   date: string;
+  note?: string;
 }
 
 export interface JobApplication {
@@ -84,6 +85,7 @@ export interface JobApplication {
   jobEntryId?: string;
   company: string;
   role: string;
+  location?: string;
   jdSnippet: string;
   matchScore?: number;
   status: ApplicationStatus;

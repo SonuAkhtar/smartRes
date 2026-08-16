@@ -317,7 +317,7 @@ export default function CoverLetter() {
                   <textarea
                     id="cl-jd"
                     className="cl_textarea"
-                    placeholder="Paste the job description here…"
+                    placeholder="Paste the job description here..."
                     value={jd}
                     onChange={(e) => setJd(e.target.value)}
                     rows={6}
@@ -347,7 +347,7 @@ export default function CoverLetter() {
                       if (entry) setCompany(entry.company);
                     }}
                   >
-                    <option value="">Choose a job analysis…</option>
+                    <option value="">Choose a job analysis...</option>
                     {jobHistory.map((entry) => (
                       <option key={entry.id} value={entry.id}>
                         {entry.company} -{" "}
@@ -411,7 +411,7 @@ export default function CoverLetter() {
             >
               {loading ? (
                 <>
-                  <Spinner size="sm" /> Generating…
+                  <Spinner size="sm" /> Generating...
                 </>
               ) : letter ? (
                 <>↺ Regenerate</>
